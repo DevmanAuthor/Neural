@@ -1,5 +1,0 @@
-nodes have bool carry signals and bool data signals that climb up the head node to influence the decision tree
-
-tree is decisive part of an agent that snoops around for food chars and pleasure spots if he feels like it
-
-1. Make sure swaths in memory deletion are actual swaths of data and not just 1 piece <--- done with bad implementation
