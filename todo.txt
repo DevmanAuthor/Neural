@@ -1,2 +1,4 @@
 Make Anatomy/Body                   [ _/ ]
 Make Bodyparts Variable             [    ]
+Make Anatomy/Body with Abs/Rect     [ ./ ]
+Nearest Neighbor                    [    ]
