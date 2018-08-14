@@ -16,15 +16,19 @@ BLUE = (0, 0, 225)
 
 def main():
     done = False
-    Dude = Entity.Guy("Dude", (50, 50))
-    Dude.Load('gfx/Birdseye/(def)head.png', 'gfx/Birdseye/(def)torso.png', 'gfx/Birdseye/(def)(L)arm.png', 'gfx/Birdseye/(def)(R)arm.png', 'gfx/Birdseye/(def)(L)leg.png', 'gfx/Birdseye/(def)(R)leg.png')
-
+    guy = Entity.Entity("Default", "gfx/none.png")
+    guy.create_body('Head', 'Torso', 'Arms', 'Legs')
+    guy.arrange_parts((10, 10), (20, 13), (82, 10))
+    # guy.body[0].set(122123)
+    guy.body.list_parts()
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+       
         pygame.transform.scale2x(render_layer, screen)
-        Dude.Run(render_layer)
+        guy.draw(render_layer)
+        # guy.debug_body()
         pygame.display.flip()
 
 
