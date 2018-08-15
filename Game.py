@@ -19,8 +19,9 @@ def main():
     guy = Entity.Entity("Default", "gfx/none.png")
     guy.create_body('Head', 'Torso', 'Arms', 'Legs')
     guy.arrange_parts((10, 10), (20, 13), (82, 10))
-    # guy.body[0].set(122123)
+    guy.body.append(Entity.Brain("Brain", (12, 10)))
     guy.body.list_parts()
+    print(guy.body[4].name, guy.body[4].pos)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
