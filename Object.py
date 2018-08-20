@@ -1,4 +1,5 @@
 
+
 num = 100
 element = ("Air", "Water", "Earth", "Fire", "Light")
 
