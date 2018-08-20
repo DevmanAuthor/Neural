@@ -1,75 +1,68 @@
 import pygame
 import os
-
-DEFSTAT = (10, 10, 10, 10, 10)
-
-
-def load_image(picdir):
-    return pygame.image.load(picdir)
+import Object
+import Tool
 
 
 class Skeleton(list):
     def __init__(self):
         self.sockets = list()
         
-    def add_part(self, params):
-        self.append(Part(params))
+    def add_limb(self, params):
+        self.append(Limb(params))
     
-    def list_parts(self):
+    def create(self, *params):
+        for i in range(len(params)):
+            self.add_limb(params[i])
+
+    def list_limbs(self):
         for i in range(len(self)):
-            print("Section #" + str(i),  "--> " + self[i].name, "\t pos: " + str(self[i].pos))
-    
+            print("Section #" + str(i),  "--> " + self[i].debug_self())
 
-class Stats():
-    def __init__(self, s):
-        self.integrity = s[0]
-        self.strength = s[1]
-        self.flexibility = s[2]
-        self.energy = s[3]
-        self.responsivenss = s[4]
+    def arrange_limbs(self, *params):
+        for i in range(len(params)):
+            self[i].place(params[i])
 
 
-class Part():
-    def __init__(self, name, pos=(0, 0)):
+class Basic():
+    def __init__(self, name, gfx=None, pos=(0, 0), stats=Object.Stats(Object.elemental)):
         self.name = name
+        if gfx is not None:
+            self.gfx = Tool.load_image(gfx)
         self.pos = pos
-        self.stats = Stats(DEFSTAT)
-    
-    def set(self, pos):
+        self.stats = stats
+
+    def place(self, pos):
         self.pos = pos
 
+    def set(self, statname, value):
+        self.stats[statname] = value
 
-class Brain(Part):
-    def __init__(self, *args):
-        Part.__init__(self, *args)
+    def debug_self(self):
+        return (self.name + "\t pos: " + str(self.pos) + "\t" + str(self.stats))
 
+
+class Limb(Basic):
+    def __init__(self, *args, stats=Object.Stats(Object.Bodylimb)):
+        super(Limb, self).__init__(*args)
+        self.stats = dict(stats)
+
+
+class Brain(Limb):
     def Dream(self, Skeleton):
         pass
 
 
-class Entity():
-    def __init__(self, name, gfx, pos=(0, 0)):
-        self.name = name
-        self.gfx = load_image(gfx)
-        self.pos = pos
+class Organism(Basic):
+    def __init__(self, *args):
+        super(Organism, self).__init__(*args)
         self.body = Skeleton()
-        
-    def create_body(self, *params):
-        for i in range(len(params)):
-            self.body.add_part(params[i])
     
-    def arrange_parts(self, *params):
-        for i in range(len(params)):
-            self.body[i].set(params[i])
+    def debug_self(self):
+        print("\n----------------------Entitiy: " + self.name + "---------------------------")
+        super(Organism, self).debug_self()
+        self.body.list_limbs()
+        print("==============================================================")
 
-    def debug_body(self):
-        print("\n\n------Entitiy: " + self.name + "-----")
-        for i in range(len(self.body)):
-            print(self.body[i].name + " pos: ", self.body[i].pos)
-       
     def draw(self, screen):
         screen.blit(self.gfx, self.pos)
-
-
-class Mover(Entity):
-    pass

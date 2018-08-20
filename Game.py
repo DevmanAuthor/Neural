@@ -16,20 +16,19 @@ BLUE = (0, 0, 225)
 
 def main():
     done = False
-    guy = Entity.Entity("Default", "gfx/none.png")
-    guy.create_body('Head', 'Torso', 'Arms', 'Legs')
-    guy.arrange_parts((10, 10), (20, 13), (82, 10))
-    guy.body.append(Entity.Brain("Brain", (12, 10)))
-    guy.body.list_parts()
-    print(guy.body[4].name, guy.body[4].pos)
+    lim = Entity.Organism("dude", "gfx/none.png")
+    lim.body.append(Entity.Brain("Brain"))
+    lim.body.create("Head", "Torus", "Extenser")
+    lim.body.arrange_limbs((14, 70), (80, 32))
+    lim.body[1].set("Strength", 13)
+    lim.debug_self()
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
        
         pygame.transform.scale2x(render_layer, screen)
-        guy.draw(render_layer)
-        # guy.debug_body()
+        screen.blit(lim.gfx, (150, 150))
         pygame.display.flip()
 
 
