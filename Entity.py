@@ -11,6 +11,9 @@ class Skeleton(list):
     def add_limb(self, params):
         self.append(Limb(params))
     
+    def add_brain(self, params):
+        self.append(Brain(params))
+
     def create(self, *params):
         for i in range(len(params)):
             self.add_limb(params[i])
@@ -40,6 +43,9 @@ class Basic():
 
     def debug_self(self):
         return (self.name + "\t pos: " + str(self.pos) + "\t" + str(self.stats))
+    
+    def draw(self, screen):
+        screen.blit(self.gfx, self.pos)
 
 
 class Limb(Basic):
