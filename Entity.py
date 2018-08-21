@@ -19,8 +19,10 @@ class Skeleton(list):
             self.add_limb(params[i])
 
     def list_limbs(self):
+        listoflimbs = str()
         for i in range(len(self)):
-            print("Section #" + str(i),  "--> " + self[i].debug_self())
+            listoflimbs += "Section #" + str(i) + "--> " + self[i].debug_self() + "\n"
+        return listoflimbs
 
     def arrange_limbs(self, *params):
         for i in range(len(params)):
@@ -28,24 +30,32 @@ class Skeleton(list):
 
 
 class Basic():
-    def __init__(self, name, gfx=None, pos=(0, 0), stats=Object.Stats(Object.elemental)):
+    def __init__(self, name, stats=Object.Stats(Object.elemental)):
         self.name = name
-        if gfx is not None:
-            self.gfx = Tool.load_image(gfx)
+        self.stats = stats
+
+    def set(self, statname, value):
+        self.stats[statname] = value
+
+    def debug_self(self):
+        return (self.name + " " + str(self.stats))
+
+
+class Basic_gfx(Basic):
+    def __init__(self, name, stats=Object.Stats(Object.elemental), pos=(0, 0), gfx="./ball.png"):
+        super(Basic_gfx, self).__init__(name, stats)
+        self.gfx = Tool.load_image(gfx)
         self.pos = pos
         self.stats = stats
 
     def place(self, pos):
         self.pos = pos
 
-    def set(self, statname, value):
-        self.stats[statname] = value
-
-    def debug_self(self):
-        return (self.name + "\t pos: " + str(self.pos) + "\t" + str(self.stats))
-    
     def draw(self, screen):
         screen.blit(self.gfx, self.pos)
+    
+    def debug_self(self):
+        return (self.name + " " + str(self.pos) + " " + self.stats)
 
 
 class Limb(Basic):
@@ -59,16 +69,10 @@ class Brain(Limb):
         pass
 
 
-class Organism(Basic):
+class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()
     
     def debug_self(self):
-        print("\n----------------------Entitiy: " + self.name + "---------------------------")
-        super(Organism, self).debug_self()
-        self.body.list_limbs()
-        print("==============================================================")
-
-    def draw(self, screen):
-        screen.blit(self.gfx, self.pos)
+        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")

@@ -3,7 +3,7 @@
 num = 100
 element = ("Air", "Water", "Earth", "Fire", "Light")
 
-elemental = {"Name": None, "integrity": 100}
+elemental = {"integrity": 100}
 Bodylimb = {"Strength": 10, "Flex": 10}
 
 

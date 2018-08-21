@@ -17,16 +17,18 @@ BLUE = (0, 0, 225)
 
 def main():
     done = False
-    lim = Entity.Organism("dude", "gfx/none.png")
+    lim = Entity.Basic_gfx("dude", "gfx/none.png")
+    
+    '''
     lim.body.add_brain("Brain")
     lim.body.create("Head", "Torus", "Extenser")
     lim.body.arrange_limbs((14, 70), (80, 32))
     lim.body[1].set("Strength", 13)
-    lim.debug_self()
+    lim.debug_self()'''
 
     World1 = World.World((400, 400), 3)
     World1.load()
-    World1.debug_self()
+    print(World1.debug_layers(0))
     
     while not done:
         for event in pygame.event.get():
