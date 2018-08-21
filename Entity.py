@@ -30,7 +30,7 @@ class Skeleton(list):
 
 
 class Basic():
-    def __init__(self, name, stats=Object.Stats(Object.elemental)):
+    def __init__(self, name, stats=Object.Stats(Object.Elemental)):
         self.name = name
         self.stats = stats
 
@@ -42,7 +42,7 @@ class Basic():
 
 
 class Basic_gfx(Basic):
-    def __init__(self, name, stats=Object.Stats(Object.elemental), pos=(0, 0), gfx="./ball.png"):
+    def __init__(self, name, stats=Object.Stats(Object.Elemental), pos=(0, 0), gfx="./ball.png"):
         super(Basic_gfx, self).__init__(name, stats)
         self.gfx = Tool.load_image(gfx)
         self.pos = pos
@@ -69,6 +69,11 @@ class Brain(Limb):
         pass
 
 
+class Organic():
+    def Compose_Matter(self, *strs):
+        self.Composition = *strs
+
+
 class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
@@ -76,3 +81,6 @@ class Organism(Basic_gfx):
     
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
+    
+    
+        

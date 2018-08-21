@@ -1,12 +1,32 @@
+Elemental = {"Integrity": 100}
 
-
-num = 100
-element = ("Air", "Water", "Earth", "Fire", "Light")
-
-elemental = {"integrity": 100}
 Bodylimb = {"Strength": 10, "Flex": 10}
 
+Compounds = {"Metal": (3, 2, 1), "Wood": (7, 0, 1), "Organic": (9, 9, 0)}
 
-class Stats(dict):
+
+def evaluate_compound(strelement):
+    numa = numb = numc = 0
+    for i in range(len(strelement)):
+        if strelement[i] is 'A':
+            numa += 1
+        elif strelement[i] is 'B':
+            numb += 1
+        elif strelement[i] is 'C':
+            numc += 1
+    return (numa, numb, numc)
+
+
+def interpret_compound(compound, strelement):
+    if tuple(compound) == evaluate_compound(strelement):
+        return True
+    else:
+        return False
+
+
+map(interpret_compound, "Asd")
+
+
+class Stats():
     def __init__(self, args):
-        self.update(args)
+        self = args

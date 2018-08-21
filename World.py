@@ -9,10 +9,9 @@ class World():
         for i in range(len(self.layers)):
             self.layers[i] = list()
         
-    def load(self):
-        self.layers[0].append(Entity.Organism("Some Guy", Object.elemental, (50, 50), "gfx/guy.png"))
-        self.layers[0][0].body.create("head", "shoulders", "knees", "toes")
-        self.layers[0].append(123)
+    def load(self, *args):
+        for i in args:
+            self.layers[0].append(i)
 
     def draw(self, screen):
         for i in range(len(self.layers[0])):
@@ -22,5 +21,5 @@ class World():
     def debug_layers(self, num):
         listofobj = str()
         for i in range(len(self.layers[num])):
-            listofobj += str(self.layers[0][i]) + " "
+            listofobj += str(self.layers[0][i]) + ": " + self.layers[0][i].debug_self()
         return listofobj

@@ -2,4 +2,4 @@ import Object
 import Entity
 
 
-BugBear = Object
+BugBear = Entity.Organism("Some Guy", {1: 2}, (50, 50), "gfx/guy.png")
