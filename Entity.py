@@ -69,18 +69,20 @@ class Brain(Limb):
         pass
 
 
-class Organic():
-    def Compose_Matter(self, *strs):
-        self.Composition = *strs
-
-
 class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()
+        self.Composition = str()
     
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
     
-    
-        
+    def Compose_Matter(self, *strs):
+        for i in range(len(strs)):
+            dna = Object.evaluate_dna(strs[i])
+            for key in Object.Compounds:
+                if Object.interpret_compound(key, dna) is True:
+                    self.Composition += (key + ".") 
+                    
+                

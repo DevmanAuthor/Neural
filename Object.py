@@ -5,7 +5,7 @@ Bodylimb = {"Strength": 10, "Flex": 10}
 Compounds = {"Metal": (3, 2, 1), "Wood": (7, 0, 1), "Organic": (9, 9, 0)}
 
 
-def evaluate_compound(strelement):
+def evaluate_dna(strelement):
     numa = numb = numc = 0
     for i in range(len(strelement)):
         if strelement[i] is 'A':
@@ -18,13 +18,10 @@ def evaluate_compound(strelement):
 
 
 def interpret_compound(compound, strelement):
-    if tuple(compound) == evaluate_compound(strelement):
+    if tuple(compound) == evaluate_dna(strelement):
         return True
     else:
         return False
-
-
-map(interpret_compound, "Asd")
 
 
 class Stats():
