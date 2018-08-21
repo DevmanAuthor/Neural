@@ -33,12 +33,21 @@ class Basic():
     def __init__(self, name, stats=Object.Stats(Object.Elemental)):
         self.name = name
         self.stats = stats
+        self.Composition = ""
 
     def set(self, statname, value):
         self.stats[statname] = value
 
     def debug_self(self):
         return (self.name + " " + str(self.stats))
+
+    def Compose_Matter(self, *strs):
+        for i in range(len(strs)):
+            for key, value in Object.Compounds.items():
+                if Object.determine_compound(Object.Compounds[key], strs[i]):
+                    self.Composition += (key + ".") 
+                else:
+                    pass
 
 
 class Basic_gfx(Basic):
@@ -73,16 +82,7 @@ class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()
-        self.Composition = str()
+        self.Composition = ""
     
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
-    
-    def Compose_Matter(self, *strs):
-        for i in range(len(strs)):
-            dna = Object.evaluate_dna(strs[i])
-            for key in Object.Compounds:
-                if Object.interpret_compound(key, dna) is True:
-                    self.Composition += (key + ".") 
-                    
-                

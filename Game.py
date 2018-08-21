@@ -23,7 +23,8 @@ def main():
     World1 = World.World((400, 400), 3)
     World1.load(Creatures.BugBear)
     print(World1.debug_layers(0))
-
+    Creatures.BugBear.Compose_Matter("AAABBC", "AABBCC", "aeoeiqnf", "Cheeky")
+    print(Creatures.BugBear.Composition)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -1,29 +1,29 @@
 Elemental = {"Integrity": 100}
 
-Bodylimb = {"Strength": 10, "Flex": 10}
+Bodylimb = {"Integrity": 10, "Strength": 10, "Flexibility": 10, "Reflexiveness": 10}
 
-Compounds = {"Metal": (3, 2, 1), "Wood": (7, 0, 1), "Organic": (9, 9, 0)}
+Compounds = {"Metal": (3, 2, 1), "Wood": (2, 2, 2), "Organic": (9, 9, 0)}
 
 
-def evaluate_dna(strelement):
+def evaluate_dna(string):
     numa = numb = numc = 0
-    for i in range(len(strelement)):
-        if strelement[i] is 'A':
+    for i in range(len(string)):
+        if string[i] is 'A':
             numa += 1
-        elif strelement[i] is 'B':
+        elif string[i] is 'B':
             numb += 1
-        elif strelement[i] is 'C':
+        elif string[i] is 'C':
             numc += 1
     return (numa, numb, numc)
 
 
-def interpret_compound(compound, strelement):
-    if tuple(compound) == evaluate_dna(strelement):
+def determine_compound(compound, string):
+    if tuple(compound) == evaluate_dna(string):
         return True
     else:
         return False
 
 
-class Stats():
+class Stats(dict):
     def __init__(self, args):
         self = args
