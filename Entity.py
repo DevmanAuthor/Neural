@@ -70,19 +70,29 @@ class Basic_gfx(Basic):
 class Limb(Basic):
     def __init__(self, *args, stats=Object.Stats(Object.Bodylimb)):
         super(Limb, self).__init__(*args)
-        self.stats = dict(stats)
+        self.stats = stats
 
 
 class Brain(Limb):
-    def Dream(self, Skeleton):
-        pass
+    def __init__(self, *args):
+        super(Brain, self).__init__(*args)
+        self.satisfaction_exp = 0
 
+    def Dream(self, body):
+        for i in range(len(body)):
+            for key, val in body[i].stats.items():
+                if key == "Integrity" and val == 100:
+                    self.satisfaction_exp += 1
 
 class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()
+        self.body.add_brain("Brain")
         self.Composition = ""
     
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
+
+    def Run(self):
+        self.body[0].Dream(self.body)

@@ -1,6 +1,6 @@
 Elemental = {"Integrity": 100}
 
-Bodylimb = {"Integrity": 10, "Strength": 10, "Flexibility": 10, "Reflexiveness": 10}
+Bodylimb = {"Integrity": 100, "Strength": 10, "Flexibility": 10, "Reflexiveness": 10}
 
 Compounds = {"Metal": (3, 2, 1), "Wood": (2, 2, 2), "Organic": (9, 9, 0)}
 
@@ -26,4 +26,4 @@ def determine_compound(compound, string):
 
 class Stats(dict):
     def __init__(self, args):
-        self = args
+        self.update(args)
