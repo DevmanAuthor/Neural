@@ -29,6 +29,8 @@ def main():
     print(World1.debug_layers(0))
     print(Creatures.BugBear.Composition)
     n = Object.Neuron(10, (0, 20), 5)
+    s = Object.evaluate_element("abc abc abc")
+    print(s)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -36,7 +38,7 @@ def main():
        
         pygame.transform.scale2x(render_layer, screen)
         World1.draw(screen)
-        print(Object.Health_Average.value)
+        # print(Object.Health_Average.value)
         pygame.display.flip()
 
 
