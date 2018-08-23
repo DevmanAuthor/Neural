@@ -2,6 +2,7 @@ import pygame
 import os
 import Object
 import Tool
+import random
 
 
 class Skeleton(list):
@@ -29,28 +30,7 @@ class Skeleton(list):
             self[i].place(params[i])
 
 
-class Basic():
-    def __init__(self, name, stats=Object.Stats(Object.Elemental)):
-        self.name = name
-        self.stats = stats
-        self.Composition = ""
-
-    def set(self, statname, value):
-        self.stats[statname] = value
-
-    def debug_self(self):
-        return (self.name + " " + str(self.stats))
-
-    def Compose_Matter(self, *strs):
-        for i in range(len(strs)):
-            for key, value in Object.Compounds.items():
-                if Object.determine_compound(Object.Compounds[key], strs[i]):
-                    self.Composition += (key + ".") 
-                else:
-                    pass
-
-
-class Basic_gfx(Basic):
+class Basic_gfx(Object.Basic):
     def __init__(self, name, stats=Object.Stats(Object.Elemental), pos=(0, 0), gfx="./ball.png"):
         super(Basic_gfx, self).__init__(name, stats)
         self.gfx = Tool.load_image(gfx)
@@ -67,7 +47,7 @@ class Basic_gfx(Basic):
         return (self.name + " " + str(self.pos) + " " + self.stats)
 
 
-class Limb(Basic):
+class Limb(Object.Basic):
     def __init__(self, *args, stats=Object.Stats(Object.Bodylimb)):
         super(Limb, self).__init__(*args)
         self.stats = stats
@@ -81,8 +61,9 @@ class Brain(Limb):
     def Dream(self, body):
         for i in range(len(body)):
             for key, val in body[i].stats.items():
-                if key == "Integrity" and val == 100:
-                    self.satisfaction_exp += 1
+                if key == "Reflexiveness":
+                    pass
+
 
 class Organism(Basic_gfx):
     def __init__(self, *args):

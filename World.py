@@ -15,7 +15,7 @@ class World():
 
     def draw(self, screen):
         for i in range(len(self.layers[0])):
-            if isinstance(self.layers[0][i], Entity.Basic):
+            if isinstance(self.layers[0][i], Object.Basic):
                 self.layers[0][i].draw(screen)
         
     def debug_layers(self, num):
