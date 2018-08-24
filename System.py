@@ -21,9 +21,7 @@ World = World.World((400, 400), 3)
 
 def Load():
     World.load(Creatures.BugBear)
-    Creatures.BugBear.body.create("Head", "Torso", "Arm")
-    Elements.generate_compounds("abc abc abc, abc abc")
-
+    
 
 def Run():
     while True:

@@ -1,5 +1,6 @@
 import Object
 import Entity
+import Creatures
 
 
 class World():
@@ -10,6 +11,7 @@ class World():
             self.layers[i] = list()
         
     def load(self, *args):
+        Creatures.Load()
         for i in args:
             self.layers[0].append(i)
 
