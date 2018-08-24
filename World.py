@@ -1,6 +1,7 @@
 import Object
 import Entity
 import Creatures
+import pygame
 
 
 class World():
@@ -25,3 +26,7 @@ class World():
         for i in range(len(self.layers[num])):
             listofobj += str(self.layers[0][i]) + ": " + self.layers[0][i].debug_self()
         return listofobj
+
+    def Run(self, screen):
+        self.draw(screen)
+    

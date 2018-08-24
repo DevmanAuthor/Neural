@@ -11,4 +11,3 @@ def Load():
     BugBear.body.create("Head", "Torso", "Arm")
 
 
-Load()

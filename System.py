@@ -1,3 +1,4 @@
+import sys
 import pygame
 # from pygame.locals import *
 import Object
@@ -21,19 +22,23 @@ World = World.World((400, 400), 3)
 
 def Load():
     World.load(Creatures.BugBear)
-    
+
 
 def Run():
+    default_font = pygame.font.SysFont(None, 12)
+    text = default_font.render("Health Sentiment: " + str(Object.stats["Health Sentiment"].value), True,  (225, 225, 255))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit()
                 pygame.quit()
-                exit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     event.type = pygame.QUIT
 
         pygame.transform.scale2x(render_layer, screen)
-        World.draw(render_layer)
+        World.Run(render_layer)
+        screen.blit(text, (0, 0))
+        print(Object.stats["Health Sentiment"].value)
         pygame.display.flip()

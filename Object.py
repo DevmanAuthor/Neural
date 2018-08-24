@@ -25,15 +25,15 @@ class Stats(dict):
         self.update(args)
 
 
-Integrity = 80
-Satisfaction = 100
-Health_Stats = (Integrity, Satisfaction)
-
-Health_Average = Neuron((sum(Health_Stats)/2), (min(Health_Stats), 100), 5)
-
-Elemental = {"Integrity": 100}
-
-Bodylimb = {"Integrity": 100, "Strength": 10, "Flexibility": 10, "Reflexiveness": 10}
+stats = {}
+stats["Highest Thought"] = 100
+stats["Integrity"] = 100
+stats["Pain"] = 0
+stats["Boredom"] = 50
+stats["Hunger"] = 10
+stats["Stability"] = random.randint(0, stats["Integrity"])
+stats["Health"] = int((stats["Integrity"] - stats["Pain"]) - (stats["Hunger"]/3))
+stats["Health Sentiment"] = Neuron(stats["Health"], (stats["Stability"], stats["Integrity"]), 1)
 
 
 class Basic():
