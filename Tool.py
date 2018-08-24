@@ -1,6 +1,15 @@
 import pygame
 
 
+def clamp(n, minn, maxn):
+    if n < minn:
+        return minn
+    elif n > maxn:
+        return maxn
+    else:
+        return n
+
+
 def intersection(a, b):
     c = a.intersection(b)
     return c
@@ -18,6 +27,3 @@ def substring(s):
  
 def load_image(picdir):
     return pygame.image.load(picdir)
-
-
-# print(intersect("Joogo", "Woo"))
