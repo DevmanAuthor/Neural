@@ -4,6 +4,7 @@ import Object
 import Entity
 import World
 import Creatures
+import Elements
 
 
 size = w, h = 640, 480
@@ -24,13 +25,8 @@ def main():
     World1.load(Creatures.BugBear)
     Creatures.BugBear.Compose_Matter("AAABBC", "AABBCC", "aeoeiqnf", "Cheeky")
     Creatures.BugBear.body.create("Head", "Torso", "Arm")
-    
-    Creatures.BugBear.Run()
-    print(World1.debug_layers(0))
-    print(Creatures.BugBear.Composition)
-    n = Object.Neuron(10, (0, 20), 5)
-    s = Object.evaluate_element("abc abc abc")
-    print(s)
+    Object.generate_compounds("abc abc abc, abc abc")
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -1,4 +1,7 @@
 import random
+import Elements
+import Tool
+import json
 from collections import Counter
 
 
@@ -18,20 +21,77 @@ class Neuron():
     def value(self, value):
         self._value = value
 
+
 def evaluate_element(string):
+    string.lower()
     return dict(Counter(string.replace(' ', '')))
+ 
 
-
-def determine_composition(compdict):
-    
-    pass
-
-
-def determine_compound(compound, string):
-    if tuple(compound) == evaluate_dna(string):
+def match_compound(compound, string):
+    if compound == evaluate_element(string):
         return True
     else:
         return False
+
+
+def filter_(x, y):
+    count = 0
+    for num in y:
+        if num in x:
+            count += 1
+    return count
+
+
+def generate_compounds(string):
+    str_cnt = Counter(string)
+    comp = ""
+    for key, value in Elements.List.items():
+        e_cnt = Counter(Elements.List[key])
+        if (e_cnt & str_cnt) == e_cnt:
+            comp += (key + ".")
+    print(comp)
+    
+    
+def generate_compound(string, elm):
+    s = Counter(string)
+    e = Counter(elm)
+    mixed_set = s & e
+    count = 0
+    comp = ''
+    l = list()
+    print("this is i:", mixed_set, "\nthis is s: ", s)
+    
+    for keys in mixed_set:
+        keysval = s.get(keys)
+        print(keys, keysval)
+        l.append(keysval)
+
+    times_to_put = 0
+    for k in e:
+        for i in range(len(l)):
+            if l[i] % e.get(k) == 0:
+                times_to_put += 1
+
+    comp = (elm + ".") * times_to_put
+    print(comp, l)
+
+
+def foof(j, i, s):
+    pass
+
+
+def break_down_compound(dictry):
+    s = str()
+    for key, val in dictry.items():
+        s += str(key) * dictry[key]
+    return s
+
+
+def break_down_element(string):
+    s = str()
+    d = evaluate_element(string)
+    d = break_down_compound(d)
+    return d
 
 
 class Stats(dict):
@@ -49,10 +109,6 @@ Elemental = {"Integrity": 100}
 
 Bodylimb = {"Integrity": 100, "Strength": 10, "Flexibility": 10, "Reflexiveness": 10}
 
-Compounds = {"Metal": (3, 2, 1), "Wood": (2, 2, 2), "Organic": (9, 9, 0)}
-    
-comp = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10, 'k': 11, 'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20, 'u': 21, 'v': 22, 'w': 23, 'x': 24, 'y': 25, 'z': 26}
-
 
 class Basic():
     def __init__(self, name, stats=Stats(Elemental)):
@@ -67,12 +123,7 @@ class Basic():
         return (self.name + " " + str(self.stats))
 
     def Compose_Matter(self, *strs):
-        for i in range(len(strs)):
-            for key, value in Compounds.items():
-                if determine_compound(Compounds[key], strs[i]):
-                    self.Composition += (key + ".") 
-                else:
-                    pass
+        pass
 
 
 def clamp(n, minn, maxn):
