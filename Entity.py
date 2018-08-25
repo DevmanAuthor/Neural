@@ -3,6 +3,37 @@ import os
 import Object
 import Tool
 import random
+import Stats
+
+
+class Basic():
+    def __init__(self, name, stats=Stats.Fundamental):
+        self.name = name
+        self.stats = stats
+        self.Composition = ""
+
+    def set(self, statname, value):
+        self.stats[statname] = value
+
+    def debug_self(self):
+        return (self.name + " " + str(self.stats))
+
+
+class Basic_gfx(Basic):
+    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="./ball.png"):
+        super(Basic_gfx, self).__init__(name, stats)
+        self.gfx = Tool.load_image(gfx)
+        self.pos = pos
+        self.stats = stats
+
+    def place(self, pos):
+        self.pos = pos
+
+    def draw(self, screen):
+        screen.blit(self.gfx, self.pos)
+    
+    def debug_self(self):
+        return (self.name + " " + str(self.pos) + " " + self.stats)
 
 
 class Skeleton(list):
@@ -30,8 +61,8 @@ class Skeleton(list):
             self[i].place(params[i])
 
 
-class Limb(Object.Basic):
-    def __init__(self, *args, stats=Object.Stats()):
+class Limb(Basic):
+    def __init__(self, *args, stats=Stats.Organic):
         super(Limb, self).__init__(*args)
         self.stats = stats
 
@@ -44,7 +75,7 @@ class Brain(Limb):
         pass
 
 
-class Organism(Object.Basic_gfx):
+class Organism(Basic_gfx):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()

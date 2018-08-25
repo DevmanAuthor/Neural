@@ -17,18 +17,18 @@ width, height = 640, 480
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 render_layer = pygame.Surface((width/2, height/2))
-World = World.World((400, 400), 3)
+World = World.World((400, 400))
 
 
 def Load():
-    World.load(Creatures.BugBear)
+    World.load(Creatures.List)
+    print(World.debug_layers())
 
 
 def Run():
-    default_font = pygame.font.SysFont(None, 12)
-    text = default_font.render("Health Sentiment: " + str(Object.stats["Health Sentiment"].value), True,  (225, 225, 255))
     while True:
         for event in pygame.event.get():
+            
             if event.type == pygame.QUIT:
                 pygame.display.quit()
                 pygame.quit()
@@ -38,7 +38,5 @@ def Run():
                     event.type = pygame.QUIT
 
         pygame.transform.scale2x(render_layer, screen)
-        World.Run(render_layer)
-        screen.blit(text, (0, 0))
-        print(Object.stats["Health Sentiment"].value)
+        World.Run(screen)
         pygame.display.flip()

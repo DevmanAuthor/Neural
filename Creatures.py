@@ -1,10 +1,11 @@
 import Object
 import Entity
+import Stats
 
 
-BugBear = Entity.Organism("Some Guy", {1: 2}, (50, 50), "gfx/guy.png")
+BugBear = Entity.Organism("Some Guy", Stats.Being, (51, 51), "gfx/guy.png")
 
-Creatures = (BugBear)
+List = [(BugBear, 5)]
 
 
 def Load():
