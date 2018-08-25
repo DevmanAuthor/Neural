@@ -1,5 +1,4 @@
 import random
-import Object
 import Tool
 import math
 
@@ -40,4 +39,5 @@ Being["Pain"] = 0
 Being["Hunger"] = 10
 Being["Mental Stability"] = random.randint(0, Being["Integrity"])
 Being["Health Actual"] = int((Being["Integrity"] - Being["Pain"]) - (Being["Hunger"]/3))
-Being["Health Sentiment"] = 0
+Being["Health Sentiment"] = Being["Health Actual"] + random.randint(0, 100)
+Being["Movement Inclination"] = Neuron(Being["Health Sentiment"] / 8, (0, 8), 1)

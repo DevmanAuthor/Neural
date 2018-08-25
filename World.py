@@ -1,5 +1,4 @@
 import UI
-import Object
 import Entity
 import Creatures
 import pygame
@@ -16,7 +15,7 @@ class World():
     def load(self, *args):
         Creatures.Load()
         for i in range(len(args)):
-            for key, value in args[i]:
+            for key, value in args[i].items():
                 self.add(key, value)
 
     def add(self, item, laynum):
@@ -25,11 +24,15 @@ class World():
     def draw(self, screen):
         for l in range(self.layersize):
             for i in range(len(self.layers[l])):
-                if isinstance(self.layers[l][i], Entity.Basic_gfx):
+                if isinstance(self.layers[l][i], Entity.Drawable_Object):
                     self.layers[l][i].draw(screen)
 
     def debug_layers(self):
-        listofobj = "-----Layers: " + str(self.layersize) + "----------\n" + str(self.layers) + "\n-------------------------\n\n"
+        layercontents = "-----Layers: " + str(self.layersize) + "----------\n" + str(self.layers) + "\n-------------------------\n\n"
+        return layercontents
+
+    def debug_entities(self):
+        listofobj = self.debug_layers()
         for i in range(self.layersize):
             for j in range(len(self.layers[i])):
                 listofobj += "Layer Position: " + str([i][j]) + self.layers[i][j].debug_self()

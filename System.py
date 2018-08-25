@@ -1,11 +1,11 @@
 import sys
 import pygame
 # from pygame.locals import *
-import Object
 import Entity
 import World
 import Creatures
 import Elements
+import UI
 
 RED = (225, 0, 0)
 GREEN = (0, 225, 0)
@@ -21,12 +21,13 @@ World = World.World((400, 400))
 
 
 def Load():
-    World.load(Creatures.List)
+    World.load(Creatures.List, UI.HUD)
     print(World.debug_layers())
 
 
 def Run():
     while True:
+        pygame.display.flip()
         for event in pygame.event.get():
             
             if event.type == pygame.QUIT:
@@ -39,4 +40,4 @@ def Run():
 
         pygame.transform.scale2x(render_layer, screen)
         World.Run(screen)
-        pygame.display.flip()
+        
