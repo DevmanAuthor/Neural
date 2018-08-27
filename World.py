@@ -13,7 +13,6 @@ class World():
             self.layers[i] = list()
         
     def load(self, *args):
-        Creatures.Load()
         for i in range(len(args)):
             for key, value in args[i].items():
                 self.add(key, value)
