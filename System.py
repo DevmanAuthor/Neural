@@ -37,7 +37,7 @@ def Run():
             Menu.Update(event)
         
         Draw()
-        print(Stats.Organic["Health Aura"].value)
+        # print(Stats.Organic["Health Aura"].value)
     
     
 def Draw():

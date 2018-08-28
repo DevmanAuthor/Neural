@@ -20,11 +20,11 @@ class World():
     def add(self, item, laynum):
         self.layers[laynum].append(item)
 
-    def draw(self, screen):
+    def draw(self, sheet):
         for l in range(self.layersize):
             for i in range(len(self.layers[l])):
                 if isinstance(self.layers[l][i], Entity.Drawable_Object):
-                    self.layers[l][i].draw(screen)
+                    self.layers[l][i].draw(sheet)
 
     def debug_layers(self):
         layercontents = "-----Layers: " + str(self.layersize) + "----------\n" + str(self.layers) + "\n-------------------------\n\n"
@@ -37,6 +37,6 @@ class World():
                 listofobj += "Layer Position: " + str([i][j]) + self.layers[i][j].debug_self()
         return listofobj
 
-    def Run(self, screen):
-        self.draw(screen)
+    def Run(self, sheet):
+        self.draw(sheet)
     

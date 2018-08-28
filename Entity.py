@@ -32,8 +32,8 @@ class Basic_gfx(Basic, Drawable_Object):
     def place(self, pos):
         self.pos = pos
 
-    def draw(self, screen):
-        screen.blit(self.gfx, self.pos)
+    def draw(self, sheet):
+        sheet.blit(self.gfx, self.pos)
     
     def debug_self(self):
         return (self.name + " " + str(self.pos) + " " + self.stats)
