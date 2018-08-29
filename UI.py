@@ -31,42 +31,70 @@ class Text():
         self.str = str(string)
 
 
-class Button(pygbutton.PygButton):
-    def __init__(self,  *args):
-        super(Button, self).__init__(*args)
-        self.pos = (self._rect.x, self._rect.y)
-        self.overlay = None
-    
-    def center(self, sheet):
-        return (self._rect.centerx - sheet.get_width()/2, self._rect.centery - sheet.get_height()/2)
+class Button():
+    def __init__(self, x, y, rect=pygame.Rect(50, 50, 10, 10), gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png", "gfx/Ball.png")):
+        self.pos = self.set_pos(x, y)
+        self._rect = rect
+        self.gfx = [None, None, None, None]
+        self.load_surfaces(gfx)
+        self._rect.move_ip(x, y)
+        
+        self.buttonPressed = False
+        self.buttonHovered = False
+        self.lastMouseevent = False
+        
+    def handle_events(self, event):
+        retval = []
+        if event.type not in [MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION]:
+            return []
+        else:
+            if not self.buttonHovered and self._rect.collidepoint(event.pos):
+                self.buttonHovered = True
+                retval.append('entered')
+            elif self.buttonHovered and not self._rect.collidepoint(event.pos):
+                self.buttonHovered = False
+                retval.append('exited')
 
-    def move(self, change):
-        self._pos = tuple((self._pos[0] + change[0], self._pos[1] + change[1]))
-        r = pygame.Rect(self._pos[0], self._pos[1], self._rect[2], self._rect[3])
-        self._propSetRect(r)
+            if self._rect.collidepoint(event.pos) and event.type == MOUSEBUTTONDOWN:
+                self.buttonPressed = True
+                retval.append("pressed")
+                self.lastMouseevent = True
+            if self.buttonPressed and event.type == MOUSEBUTTONUP:
+                self.buttonPressed = False
+                retval.append("released")
 
-    def add_overlay(self, gfx):
-        self.overlay = Tool.load_image(gfx)
+            doMouseclick = False
+            if event.type == MOUSEBUTTONUP:
+                if self.lastMouseevent:
+                    doMouseclick = True
+                self.lastMouseevent = False
+
+            if doMouseclick:
+                retval.append("clicked")
+
+        return retval
+
+    def load_surfaces(self, sheets):
+        for i in range(len(sheets)):
+            if sheets[i] is not None:
+                self.gfx[i] = (Tool.load_image(sheets[i]))
+        self._rect = self.gfx[0].get_rect()
     
-    def add_text(self, font, string, color=BLACK):
-        self.text = Text(font, string, color)
-        self.text.pos = self.center(self.text.obj)
+    def set_pos(self, x, y):
+        self.pos = (x, y)
 
     def draw(self, sheet):
-        super(Button, self).draw(sheet)
-        if self.overlay is not None:
-            sheet.blit(self.overlay, self.center(self.overlay))
-        if self.text is not None:
-            sheet.blit(self.text.obj, self.center(self.text.obj))
+        # print(self.gfx)
+        if self.gfx[3] is not None:
+            sheet.blit(self.gfx[3], self._rect)
 
-    def set_pos(self, pos):
-        self._pos = pos
-    
-    def get_pos(self):
-        return self._pos
+        if self.buttonPressed:
+            sheet.blit(self.gfx[1], self._rect)
+        elif self.buttonHovered and self.gfx[2] is not None:
+            sheet.blit(self.gfx[2], self._rect)
+        else:
+            sheet.blit(self.gfx[0], self._rect)
 
-    pos = property(get_pos, set_pos)
-    
 
 text = Text(pygame.font.SysFont(None, 18), Stats.Organic["Health Aura"].value)
 

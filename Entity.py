@@ -23,7 +23,7 @@ class Basic():
 
 
 class Basic_gfx(Basic, Drawable_Object):
-    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="./ball.png"):
+    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
         super(Basic_gfx, self).__init__(name, stats)
         self.gfx = Tool.load_image(gfx)
         self.pos = pos
