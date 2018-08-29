@@ -37,7 +37,7 @@ class Text():
 
 
 class Button():
-    def __init__(self, x=0, y=0, overlay=None, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png"), ):
+    def __init__(self, x=0, y=0, overlay=None, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png")):
         self.gfx = [None, None, None]
         self.pos = (x, y)
         self.load_surfaces(gfx)
@@ -92,7 +92,7 @@ class Button():
     def load_surfaces(self, sheets):
         for i in range(len(sheets)):
             if sheets[i] is not None:
-                self.gfx[i] = (Tool.load_image(sheets[i]))
+                self.gfx[i] = Tool.load_image(sheets[i])
 
     def move(self, x, y):
         self.pos = (self.pos[0]+x, self.pos[1]+y)

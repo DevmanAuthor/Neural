@@ -14,16 +14,15 @@ def Load(sheet):
     Buttons["Exit"] = UI.Button(0, 0, "gfx/UI/exit.png")
     Buttons["Exit"].scale(20, 20, True)
     Buttons["Exit"].place(sheet.get_width()-Buttons["Exit"].rect.width-1, 0)
-    print(Buttons["Start"].pos)
 
 
 def Update(event):
+    Buttons["Start"].handle_events(event)
+    
     if 'clicked' in Buttons["Start"].handle_events(event):
         Buttons["Start"].set_text("BOOOM")
     else:
         Buttons["Start"].set_text("Go")
-    if 'clicked' in Buttons["Exit"].handle_events(event):
-        pass
 
 
 def Draw(sheet):

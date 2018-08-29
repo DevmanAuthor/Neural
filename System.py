@@ -34,8 +34,6 @@ def Run():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Quit()
-            if not Menu.Update(event):
-                Quit()
         
         Draw()
         # print(Stats.Organic["Health Aura"].value)
