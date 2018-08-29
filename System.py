@@ -19,7 +19,7 @@ World = World.World((400, 400))
 
 def Load():
     Creatures.Load()
-    Menu.Load()
+    Menu.Load(screen)
     World.load(Creatures.List)
     print(World.debug_layers())
 
@@ -34,7 +34,8 @@ def Run():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Quit()
-            Menu.Update(event)
+            if not Menu.Update(event):
+                Quit()
         
         Draw()
         # print(Stats.Organic["Health Aura"].value)

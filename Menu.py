@@ -1,30 +1,35 @@
 import Tool
 import UI
 import pygame
+import sys
 
-Buttons = (UI.Button(100, 70), UI.Button(30, 200))
+Buttons = dict()
 Background = Tool.load_image("gfx/UI/MenuBackground.png")
 
 
-def Load(): 
-    Buttons[0].scale(50, 50, True)
-    Buttons[0].set_text("Stuff")
-    pass
+def Load(sheet): 
+    Buttons["Start"] = UI.Button()
+    Buttons["Start"].place((sheet.get_width()/2)-Buttons["Start"].rect.centerx, (sheet.get_height()/2)-Buttons["Start"].rect.centery)
+    Buttons["Start"].set_text("Start")
+    Buttons["Exit"] = UI.Button(0, 0, "gfx/UI/exit.png")
+    Buttons["Exit"].scale(20, 20, True)
+    Buttons["Exit"].place(sheet.get_width()-Buttons["Exit"].rect.width-1, 0)
+    print(Buttons["Start"].pos)
 
 
 def Update(event):
-    print(Buttons[0].rect)
-    if 'clicked' in Buttons[0].handle_events(event):
-        Buttons[0].move(10, 10)
-    Buttons[1].handle_events(event)
+    if 'clicked' in Buttons["Start"].handle_events(event):
+        Buttons["Start"].set_text("BOOOM")
+    else:
+        Buttons["Start"].set_text("Go")
+    if 'clicked' in Buttons["Exit"].handle_events(event):
+        pass
 
 
 def Draw(sheet):
     sheet.blit(Background, (0, 0))
-    Buttons[0].draw(sheet)
-    Buttons[1].draw(sheet)
-    pygame.draw.rect(sheet, (225, 0, 0), Buttons[0].rect, 1)
-    pygame.draw.rect(sheet, (225, 0, 0), Buttons[1].rect, 1)
+    Buttons["Start"].draw(sheet)
+    Buttons["Exit"].draw(sheet)
     # print(PlayButton.pos, PlayButton._rect)
 
 

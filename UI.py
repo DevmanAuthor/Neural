@@ -37,20 +37,23 @@ class Text():
 
 
 class Button():
-    def __init__(self, x, y, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png", None)):
-        self.gfx = [None, None, None, None]
-        self.load_surfaces(gfx)
+    def __init__(self, x=0, y=0, overlay=None, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png"), ):
+        self.gfx = [None, None, None]
         self.pos = (x, y)
+        self.load_surfaces(gfx)
         self._rect = self.get_rect()
         self.rect.move_ip(x, y)
         self.text = None
         self.buttonPressed = False
         self.buttonHovered = False
         self.lastMouseevent = False
+        self.overlay = overlay
+        if overlay is not None:
+            self.overlay = Tool.load_image(overlay)
         
     def set_text(self, string, font=pygame.font.SysFont(None, 15), color=BLACK):
         self.text = Text(string, color, font)
-        self.text.pos = (self.rect.centerx-self.text.obj.get_width()/2, self.rect.centery-self.text.obj.get_height()/2)
+        self.text.pos = (self.rect.centerx-self.text.obj.get_width()/4, self.rect.centery-self.text.obj.get_height()/4)
 
     def add_overlay(string):
         self.gfx[3] = Tool.load_image(string)
@@ -94,8 +97,8 @@ class Button():
     def move(self, x, y):
         self.pos = (self.pos[0]+x, self.pos[1]+y)
         
-    def place(x, y):
-        self.rect.move_ip(x, y)
+    def place(self, x, y):
+        self.pos = (x, y)
 
     def get_rect(self):
         self._rect = pygame.Rect(self.pos[0], self.pos[1], self.gfx[0].get_width(), self.gfx[0].get_height())
@@ -108,8 +111,8 @@ class Button():
             sheet.blit(self.gfx[2], self.rect)
         else:
             sheet.blit(self.gfx[0], self.rect)
-        if self.gfx[3] is not None:
-            sheet.blit(self.gfx[3], self.center(self.gfx[3]))
+        if self.overlay is not None:
+            sheet.blit(self.overlay, self.center(self.overlay))
         
         if self.text is not None:
             sheet.blit(self.text.obj, self.center(self.text.obj))
@@ -118,8 +121,8 @@ class Button():
         for i in range(3):
             if self.gfx[i] is not None:
                 self.gfx[i] = pygame.transform.scale(self.gfx[i], (w, h))
-        if overscale and self.gfx[3] is not None:
-            self.gfx[3] = pygame.transform.scale(self.gfx[3], (int(w-w/2), int(h-h/2)))
+        if overscale and self.overlay is not None:
+            self.overlay = pygame.transform.scale(self.overlay, (int(w/2), int(h/2)))
 
     def center(self, obj):
         return (self.rect.centerx-obj.get_width()/2, self.rect.centery-obj.get_height()/2)
