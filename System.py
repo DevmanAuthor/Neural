@@ -42,7 +42,7 @@ def Run():
     
 def Draw():
     pygame.transform.scale2x(render_layer, screen)
-    Menu.draw(screen)
+    Menu.Draw(screen)
     UI.text.draw(screen)
     World.Run(screen)
     pygame.display.flip()

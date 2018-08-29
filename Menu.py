@@ -8,20 +8,22 @@ Background = Tool.load_image("gfx/UI/MenuBackground.png")
 
 def Load():
     PlayButton.setSurfaces("gfx/UI/BtnElevated.png", "gfx/UI/BtnPressed.png")
+    PlayButton.add_text(pygame.font.SysFont(None, 18), "Hit me")
 
 
 def Update(event):
     Btnev = PlayButton.handleEvent(event)
     if 'click' in Btnev:
-        PlayButton.move((10, 10))
-        print(PlayButton.pos)
+        PlayButton.text.update("Help")
 
 
-def draw(sheet):
+def Draw(sheet):
     sheet.blit(Background, (0, 0))
     PlayButton.draw(sheet)
     # pygame.draw.rect(sheet, (225, 0, 0), PlayButton._rect)
     # print(PlayButton.pos, PlayButton._rect)
+
+
 
 
 
