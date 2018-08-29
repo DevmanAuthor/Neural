@@ -16,33 +16,45 @@ BLUE = (0, 0, 225)
 
 
 class Text():
-    def __init__(self, font, txt, color=WHITE, pos=(0, 0)):
+    def __init__(self, string, color=WHITE, font=pygame.font.SysFont(None, 15), pos=(0, 0)):
         self.font = font
         self.color = color
         self.pos = pos
-        self.str = str(txt)
-        self.obj = self.font.render(self.str, True, self.color)
+        self.str = str(string)
+        self._obj = self.font.render(self.str, True, self.color)
 
+    def get_obj(self):
+        self._obj = self.font.render(self.str, True, self.color)
+        return self._obj
+        
     def draw(self, sheet):
-        self.obj = self.font.render(self.str, True, self.color)
         sheet.blit(self.obj, self.pos)
     
     def update(self, string):
         self.str = str(string)
 
+    obj = property(get_obj)
+
 
 class Button():
-    def __init__(self, x, y, rect=pygame.Rect(50, 50, 10, 10), gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png", "gfx/Ball.png")):
-        self.pos = self.set_pos(x, y)
-        self._rect = rect
+    def __init__(self, x, y, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png", None)):
         self.gfx = [None, None, None, None]
         self.load_surfaces(gfx)
-        self._rect.move_ip(x, y)
-        
+        self.pos = (x, y)
+        self._rect = self.get_rect()
+        self.rect.move_ip(x, y)
+        self.text = None
         self.buttonPressed = False
         self.buttonHovered = False
         self.lastMouseevent = False
         
+    def set_text(self, string, font=pygame.font.SysFont(None, 15), color=BLACK):
+        self.text = Text(string, color, font)
+        self.text.pos = (self.rect.centerx-self.text.obj.get_width()/2, self.rect.centery-self.text.obj.get_height()/2)
+
+    def add_overlay(string):
+        self.gfx[3] = Tool.load_image(string)
+
     def handle_events(self, event):
         retval = []
         if event.type not in [MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION]:
@@ -78,24 +90,43 @@ class Button():
         for i in range(len(sheets)):
             if sheets[i] is not None:
                 self.gfx[i] = (Tool.load_image(sheets[i]))
-        self._rect = self.gfx[0].get_rect()
-    
-    def set_pos(self, x, y):
-        self.pos = (x, y)
+
+    def move(self, x, y):
+        self.pos = (self.pos[0]+x, self.pos[1]+y)
+        
+    def place(x, y):
+        self.rect.move_ip(x, y)
+
+    def get_rect(self):
+        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.gfx[0].get_width(), self.gfx[0].get_height())
+        return self._rect
 
     def draw(self, sheet):
-        # print(self.gfx)
-        if self.gfx[3] is not None:
-            sheet.blit(self.gfx[3], self._rect)
-
         if self.buttonPressed:
-            sheet.blit(self.gfx[1], self._rect)
+            sheet.blit(self.gfx[1], self.rect)
         elif self.buttonHovered and self.gfx[2] is not None:
-            sheet.blit(self.gfx[2], self._rect)
+            sheet.blit(self.gfx[2], self.rect)
         else:
-            sheet.blit(self.gfx[0], self._rect)
+            sheet.blit(self.gfx[0], self.rect)
+        if self.gfx[3] is not None:
+            sheet.blit(self.gfx[3], self.center(self.gfx[3]))
+        
+        if self.text is not None:
+            sheet.blit(self.text.obj, self.center(self.text.obj))
+    
+    def scale(self, w, h, overscale=False):
+        for i in range(3):
+            if self.gfx[i] is not None:
+                self.gfx[i] = pygame.transform.scale(self.gfx[i], (w, h))
+        if overscale and self.gfx[3] is not None:
+            self.gfx[3] = pygame.transform.scale(self.gfx[3], (int(w-w/2), int(h-h/2)))
 
+    def center(self, obj):
+        return (self.rect.centerx-obj.get_width()/2, self.rect.centery-obj.get_height()/2)
+    
+    rect = property(get_rect)
+        
 
-text = Text(pygame.font.SysFont(None, 18), Stats.Organic["Health Aura"].value)
+text = Text(Stats.Organic["Health Aura"].value)
 
 HUD = {text: 9}
