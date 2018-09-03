@@ -16,17 +16,18 @@ class MainMenu(Director.Scene):
     def Load(self): 
         self.Buttons["Start"] = UI.Button(0, 0, None, "Start")
         self.Buttons["Start"].place((System.screen.get_width()/2)-self.Buttons["Start"].rect.centerx, (System.screen.get_height()/2)-self.Buttons["Start"].rect.centery)
-        self.Buttons["Toggle"] = UI.ToggleButton(0, 0, None, "---")
+        self.Buttons["Toggle"] = UI.ToggleButton(0, 0, None, "OFF")
 
     def Handle_Events(self, event):
         if "clicked" in self.Buttons["Start"].handle_events(event):
             self.Buttons["Start"].set_text("Soon to be Implemented")
-        if "toggled_on" in self.Buttons["Toggle"].handle_events(event):
+        retval = self.Buttons["Toggle"].handle_events(event)
+        if "toggle_on" in retval:
             self.Buttons["Toggle"].set_text("ON")
-        elif "toggled_off" in self.Buttons["Toggle"].handle_events(event):
+        elif "toggle_off" in retval:
             self.Buttons["Toggle"].set_text("OFF")
-        
-        print(self.Buttons["Toggle"].handle_events(event), self.Buttons["Toggle"].SWITCH_ON, self.Buttons["Toggle"].SWITCH_OFF)
+
+        print(retval, self.Buttons["Toggle"].SWITCH)
 
     def Draw(self, sheet):
         System.screen.blit(self.Background, (0, 0))

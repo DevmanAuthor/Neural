@@ -164,8 +164,7 @@ class Button(object):
 class ToggleButton(Button):
     def __init__(self, x=0, y=0, overlay=None, text=None, font=pygame.font.SysFont(None, 12), normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
         super(ToggleButton, self).__init__(x, y, overlay, text, font, normal, pressed, hover)
-        self.SWITCH_ON = False
-        self.SWITCH_OFF = True
+        self.SWITCH = False
         self.doMouseclick = False
 
     def handle_events(self, event):
@@ -173,10 +172,10 @@ class ToggleButton(Button):
         if event.type not in [MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION]:
             return []
         else:
-            if not self.buttonHovered and self._rect.collidepoint(event.pos):
+            if not self.buttonHovered and self.rect.collidepoint(event.pos):
                 self.buttonHovered = True
                 retval.append('entered')
-            elif self.buttonHovered and not self._rect.collidepoint(event.pos):
+            elif self.buttonHovered and not self.rect.collidepoint(event.pos):
                 self.buttonHovered = False
                 retval.append('exited')
 
@@ -187,18 +186,35 @@ class ToggleButton(Button):
             if self.buttonPressed and event.type == MOUSEBUTTONUP:
                 self.buttonPressed = False
                 retval.append("released")
-                          
+
+            doMouseclick = False
+            if event.type == MOUSEBUTTONUP:
+                if self.lastMouseevent:
+                    doMouseclick = True
+                self.lastMouseevent = False
+
+            if doMouseclick:
+                if self.SWITCH is True:
+                    retval.append("toggle_on")
+                    self.SWITCH = False
+                elif self.SWITCH is False:
+                    retval.append("toggle_off")
+                    self.SWITCH = True
+                retval.append("clicked")
+                
         return retval
 
     def draw(self, sheet):
         pygame.draw.rect(sheet, System.RED, self.rect)   
-        if self.SWITCH_ON is True:
+        if self.SWITCH is True:
+            self.currentsize = (self.pressed_gfx.get_width(), self.pressed_gfx.get_height())
             sheet.blit(self.pressed_gfx, self.rect)
             self.draw_relief(sheet, self.rect, "pressed")
-        elif self.SWITCH_OFF is True:
+        elif self.SWITCH is False:
+            self.currentsize = (self.normal_gfx.get_width(), self.normal_gfx.get_height())
             sheet.blit(self.normal_gfx, self.rect)
             self.draw_relief(sheet, self.rect, "normal")
-        elif self.buttonHovered:
+        if self.buttonHovered:
             pass
 
         if self.text is not None:
