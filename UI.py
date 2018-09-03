@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import System
 import Stats
 import Creatures
 import Entity
@@ -8,15 +9,9 @@ import pygbutton
 
 pygame.init()
 
-WHITE = (225, 225, 225)
-BLACK = (0, 0, 0)
-RED = (225, 0, 0)
-GREEN = (0, 225, 0)
-BLUE = (0, 0, 225)
 
-
-class Text():
-    def __init__(self, string, color=WHITE, font=pygame.font.SysFont(None, 15), pos=(0, 0)):
+class Text(object):
+    def __init__(self, string, color=System.WHITE, font=pygame.font.SysFont(None, 15), pos=(0, 0)):
         self.font = font
         self.color = color
         self.pos = pos
@@ -36,27 +31,40 @@ class Text():
     obj = property(get_obj)
 
 
-class Button():
-    def __init__(self, x=0, y=0, overlay=None, gfx=("gfx/UI/BtnNormal.png", "gfx/UI/BtnPressed.png", "gfx/UI/BtnHover.png")):
-        self.gfx = [None, None, None]
+class Button(object):
+    def __init__(self, x=0, y=0, overlay=None, text=None, font=pygame.font.SysFont(None, 12), normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
         self.pos = (x, y)
-        self.load_surfaces(gfx)
-        self._rect = self.get_rect()
-        self.rect.move_ip(x, y)
-        self.text = None
+        self._font = font
+        self.normal_gfx = Tool.load_image(normal)
+        self.pressed_gfx = Tool.load_image(pressed)
+        self.hover_gfx = Tool.load_image(hover)
+        self.currentsize = (self.normal_gfx.get_width(), self.normal_gfx.get_height())
+        self.place(x, y)
+        self.overlay_gfx = overlay
+        
         self.buttonPressed = False
         self.buttonHovered = False
         self.lastMouseevent = False
-        self.overlay = overlay
+        self.text = None
+        self.reliefsize = 3
+        self.clicks_0 = False 
+        self.clicks_1 = True
         if overlay is not None:
             self.overlay = Tool.load_image(overlay)
-        
-    def set_text(self, string, font=pygame.font.SysFont(None, 15), color=BLACK):
-        self.text = Text(string, color, font)
-        self.text.pos = (self.rect.centerx-self.text.obj.get_width()/4, self.rect.centery-self.text.obj.get_height()/4)
+        if text is not None:
+            self.set_text(text)
 
-    def add_overlay(string):
-        self.gfx[3] = Tool.load_image(string)
+    def set_text(self, string, font=pygame.font.SysFont(None, 15), color=System.BLACK):
+        self.text = Text(string, color, font)
+        self.text.pos = (self.rect.centerx-self.text.obj.get_width(), self.rect.centery-self.text.obj.get_height())
+        
+        self.scale(self.text.obj.get_rect().width+self.reliefsize+10, self.rect[3])
+
+    def set_reliefsize(size):
+        self.reliefsize = size
+
+    def load_overlay(string):
+        self.overlay_gfx = Tool.load_image(string)
 
     def handle_events(self, event):
         retval = []
@@ -89,11 +97,6 @@ class Button():
 
         return retval
 
-    def load_surfaces(self, sheets):
-        for i in range(len(sheets)):
-            if sheets[i] is not None:
-                self.gfx[i] = Tool.load_image(sheets[i])
-
     def move(self, x, y):
         self.pos = (self.pos[0]+x, self.pos[1]+y)
         
@@ -101,34 +104,106 @@ class Button():
         self.pos = (x, y)
 
     def get_rect(self):
-        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.gfx[0].get_width(), self.gfx[0].get_height())
+        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.currentsize[0], self.currentsize[1])
         return self._rect
 
     def draw(self, sheet):
         if self.buttonPressed:
-            sheet.blit(self.gfx[1], self.rect)
-        elif self.buttonHovered and self.gfx[2] is not None:
-            sheet.blit(self.gfx[2], self.rect)
+            self.currentsize = (self.pressed_gfx.get_width(), self.pressed_gfx.get_height())
+            sheet.blit(self.pressed_gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "pressed")
+
+        elif self.buttonHovered:
+            self.currentsize = (self.hover_gfx.get_width(), self.hover_gfx.get_height())
+            sheet.blit(self.hover_gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "hover")
+
         else:
-            sheet.blit(self.gfx[0], self.rect)
-        if self.overlay is not None:
-            sheet.blit(self.overlay, self.center(self.overlay))
+            self.currentsize = (self.normal_gfx.get_width(), self.normal_gfx.get_height())
+            sheet.blit(self.normal_gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "normal")
+
+        if self.overlay_gfx is not None:
+            sheet.blit(self.overlay_gfx, self.center(self.overlay))
         
         if self.text is not None:
-            sheet.blit(self.text.obj, self.center(self.text.obj))
-    
-    def scale(self, w, h, overscale=False):
-        for i in range(3):
-            if self.gfx[i] is not None:
-                self.gfx[i] = pygame.transform.scale(self.gfx[i], (w, h))
+            sheet.blit(self.text.obj, self.center(self.text.obj))        
+        # pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx-1, y), self.reliefsize)
+
+    def scale(self, w, h, overscale=False, we=1, he=1):
+        self.normal_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
+        self.pressed_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
+        self.hover_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         if overscale and self.overlay is not None:
-            self.overlay = pygame.transform.scale(self.overlay, (int(w/2), int(h/2)))
+            self.overlay = pygame.transform.scale(self.overlay, (int(w/we), int(h/he)))
+
+    def draw_relief(self, sheet, rect, style):
+        x, y, xx, yy = rect[0], rect[1], rect[0]+rect[2], rect[1]+rect[3]
+        if style == "normal":
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy-1), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx-1, y), self.reliefsize) 
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y-1), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x-1, yy), self.reliefsize)
+        elif style == "pressed":
+            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (x, yy-1), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (xx-1, y), self.reliefsize) 
+            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx, y-1), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (x-1, yy), self.reliefsize)
+        elif style == "hover":
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy-1), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx-1, y), self.reliefsize) 
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y-1), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x-1, yy), self.reliefsize)
 
     def center(self, obj):
         return (self.rect.centerx-obj.get_width()/2, self.rect.centery-obj.get_height()/2)
-    
+
     rect = property(get_rect)
-        
+
+
+class ToggleButton(Button):
+    def __init__(self, x=0, y=0, overlay=None, text=None, font=pygame.font.SysFont(None, 12), normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
+        super(ToggleButton, self).__init__(x, y, overlay, text, font, normal, pressed, hover)
+        self.SWITCH_ON = False
+        self.SWITCH_OFF = True
+        self.doMouseclick = False
+
+    def handle_events(self, event):
+        retval = []
+        if event.type not in [MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION]:
+            return []
+        else:
+            if not self.buttonHovered and self._rect.collidepoint(event.pos):
+                self.buttonHovered = True
+                retval.append('entered')
+            elif self.buttonHovered and not self._rect.collidepoint(event.pos):
+                self.buttonHovered = False
+                retval.append('exited')
+
+            if self._rect.collidepoint(event.pos) and event.type == MOUSEBUTTONDOWN:
+                self.buttonPressed = True
+                retval.append("pressed")
+                self.lastMouseevent = True
+            if self.buttonPressed and event.type == MOUSEBUTTONUP:
+                self.buttonPressed = False
+                retval.append("released")
+                          
+        return retval
+
+    def draw(self, sheet):
+        pygame.draw.rect(sheet, System.RED, self.rect)   
+        if self.SWITCH_ON is True:
+            sheet.blit(self.pressed_gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "pressed")
+        elif self.SWITCH_OFF is True:
+            sheet.blit(self.normal_gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "normal")
+        elif self.buttonHovered:
+            pass
+
+        if self.text is not None:
+            sheet.blit(self.text.obj, self.center(self.text.obj))     
+ 
 
 text = Text(Stats.Organic["Health Aura"].value)
 

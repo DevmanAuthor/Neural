@@ -16,7 +16,7 @@ import Tool
 def Run():
     System.screen.fill(System.BLACK)
     activescene = Scenes.MainMenu()
-    while True:
+    while activescene is not None:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

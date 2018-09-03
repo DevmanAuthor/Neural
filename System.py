@@ -2,7 +2,13 @@ import pygame
 import sys
 
 BLACK = (0, 0, 0)
-WHITE = (225, 225, 225)
+WHITE = (255, 255, 255)
+DARKGRAY = (64, 64, 64)
+GRAY = (128, 128, 128)
+LIGHTGRAY = (180, 180, 180)
+RED = (225, 0, 0)
+GREEN = (0, 225, 0)
+BLUE = (0, 0, 225)
 
 
 class Empty(object):
