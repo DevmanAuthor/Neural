@@ -23,6 +23,10 @@ def clamp(n, minn, maxn):
         return n
 
 
+def center(obj, rect):
+        return (rect.centerx-obj.get_width()/2, rect.centery-obj.get_height()/2)
+
+
 def load_image(picdir): return pygame.image.load(picdir)
 
 

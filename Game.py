@@ -21,7 +21,8 @@ def Run():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 System.Quit()
-            activescene.Handle_Events(event)            
+            activescene.Handle_Events(event)  
+
         activescene = activescene.nextscene
         pygame.transform.scale2x(System.render_sheet, System.screen)
         activescene.Draw(System.screen)

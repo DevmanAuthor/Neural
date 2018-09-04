@@ -47,10 +47,9 @@ class Button(object):
         self.lastMouseevent = False
         self.text = None
         self.reliefsize = 3
-        self.clicks_0 = False 
-        self.clicks_1 = True
+
         if overlay is not None:
-            self.overlay = Tool.load_image(overlay)
+            self.overlay_gfx = Tool.load_image(overlay)
         if text is not None:
             self.set_text(text)
 
@@ -124,18 +123,19 @@ class Button(object):
             self.draw_relief(sheet, self.rect, "normal")
 
         if self.overlay_gfx is not None:
-            sheet.blit(self.overlay_gfx, self.center(self.overlay))
+            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx, self.rect))
         
         if self.text is not None:
-            sheet.blit(self.text.obj, self.center(self.text.obj))        
+            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))        
         # pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx-1, y), self.reliefsize)
 
     def scale(self, w, h, overscale=False, we=1, he=1):
         self.normal_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         self.pressed_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         self.hover_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
-        if overscale and self.overlay is not None:
-            self.overlay = pygame.transform.scale(self.overlay, (int(w/we), int(h/he)))
+        if overscale and self.overlay_gfx is not None:
+            self.overlay_gfx = pygame.transform.scale(self.overlay_gfx, (int(w/we), int(h/he)))
+        self.currentsize = (w, h)
 
     def draw_relief(self, sheet, rect, style):
         x, y, xx, yy = rect[0], rect[1], rect[0]+rect[2], rect[1]+rect[3]
@@ -154,9 +154,6 @@ class Button(object):
             pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx-1, y), self.reliefsize) 
             pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y-1), self.reliefsize)
             pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x-1, yy), self.reliefsize)
-
-    def center(self, obj):
-        return (self.rect.centerx-obj.get_width()/2, self.rect.centery-obj.get_height()/2)
 
     rect = property(get_rect)
 
@@ -218,7 +215,7 @@ class ToggleButton(Button):
             pass
 
         if self.text is not None:
-            sheet.blit(self.text.obj, self.center(self.text.obj))     
+            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))     
  
 
 text = Text(Stats.Organic["Health Aura"].value)
