@@ -18,7 +18,6 @@ class MainMenu(Director.Scene):
         self.Buttons["Start"] = UI.Button(0, 0, "gfx/ball.png")
         self.Buttons["Start"].place((System.width/2)-self.Buttons["Start"].rect[2], (System.height/2)-self.Buttons["Start"].rect[3])
         self.Buttons["Toggle"] = UI.ToggleButton(0, 0, None, "OFF")
-        print(self.Buttons["Start"].pos, System.width, System.height)
 
     def Handle_Events(self, event):
         if "clicked" in self.Buttons["Start"].handle_events(event):
@@ -29,8 +28,6 @@ class MainMenu(Director.Scene):
             self.Buttons["Toggle"].set_text("ON")
         elif "toggle_off" in retval:
             self.Buttons["Toggle"].set_text("OFF")
-
-        print(retval, self.Buttons["Toggle"].SWITCH)
 
     def Draw(self, sheet):
         System.screen.blit(self.Background, (0, 0))
