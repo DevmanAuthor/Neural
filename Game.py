@@ -13,33 +13,21 @@ import UI
 import Tool
 
 
-class scenes(lists, object):
-    pass
-
-
-scene_s = scenes()
+SceneManager = Director.SceneManager(Scenes.List)
 
 
 def Run():
     System.screen.fill(System.BLACK)
-    activescene = Scenes.MainMenu()
-    scene_s.append(Scenes.MainMenu)
-    while activescene is not None:
-        
+    while SceneManager is not None:
+        Scenes.Update_Scenes()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 System.Quit()
-            activescene.Handle_Events(event)  
+            SceneManager.Handle_Scene_Events(event)
 
-        for i in range(len(scene_s)):
-            if scene_s[i].active is False:
-                scene_s[i].pop(scene_s[i])
-            else:
-                scene_s[i].Draw(System.screen)
-
-        activescene = activescene.nextscene
+        SceneManager.check_active()
         pygame.transform.scale2x(System.render_sheet, System.screen)
-        activescene.Draw(System.screen)
+        SceneManager.Draw(System.screen)
         pygame.display.flip()
     
 
