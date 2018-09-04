@@ -19,16 +19,21 @@ class Text(object):
         self._obj = self.font.render(self.str, True, self.color)
 
     def get_obj(self):
-        self._obj = self.font.render(self.str, True, self.color)
         return self._obj
         
+    def set_obj(self, size=None):
+        if size is None:
+            self._obj = self.font.render(self.str, True, self.color)
+        else:
+            self._obj = pygame.transform.scale(self._obj, size)
+
     def draw(self, sheet):
         sheet.blit(self.obj, self.pos)
     
     def update(self, string):
         self.str = str(string)
 
-    obj = property(get_obj)
+    obj = property(get_obj, set_obj)
 
 
 class Button(object):
@@ -49,21 +54,26 @@ class Button(object):
         self.reliefsize = 3
 
         if overlay is not None:
-            self.overlay_gfx = Tool.load_image(overlay)
+            self.load_overlay(overlay)
         if text is not None:
             self.set_text(text)
-
+    
     def set_text(self, string, font=pygame.font.SysFont(None, 15), color=System.BLACK):
         self.text = Text(string, color, font)
         self.text.pos = (self.rect.centerx-self.text.obj.get_width(), self.rect.centery-self.text.obj.get_height())
         
-        self.scale(self.text.obj.get_rect().width+self.reliefsize+10, self.rect[3])
-
+        self.scale(self.text.obj.get_rect().width+self.reliefsize+10, self.text.obj.get_rect().height+self.reliefsize+10)
+        
     def set_reliefsize(size):
         self.reliefsize = size
 
-    def load_overlay(string):
+    def load_overlay(self, string, w=None, h=None):
         self.overlay_gfx = Tool.load_image(string)
+        if w is not None and h is not None:
+            self.scale_overlay(w, h)
+
+    def fix_overlay(self):
+        self.overlay_gfx = pygame.transform.scale(self.overlay_gfx, (self.scale_he, self.scale_we))
 
     def handle_events(self, event):
         retval = []
@@ -127,15 +137,23 @@ class Button(object):
         
         if self.text is not None:
             sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))        
-        # pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx-1, y), self.reliefsize)
 
-    def scale(self, w, h, overscale=False, we=1, he=1):
+    def scale(self, w, h, overscale=False, w2=1, h2=1):
+        scale = (int(w/w2), int(h/h2))
         self.normal_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         self.pressed_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         self.hover_gfx = pygame.transform.scale(self.normal_gfx, (w, h))
         if overscale and self.overlay_gfx is not None:
-            self.overlay_gfx = pygame.transform.scale(self.overlay_gfx, (int(w/we), int(h/he)))
+            self.scale_overlay(w2, h2)
         self.currentsize = (w, h)
+
+    def scale_overlay(self, w, h):
+        w = int(self.normal_gfx.get_width()/w)
+        h = int(self.normal_gfx.get_height()/h)
+        self.overlay_gfx = pygame.transform.scale(self.overlay_gfx, (w, h))
+
+    def fix_text(self):
+        self.text.set_obj((self.rect[2]-self.reliefsize, self.rect[3]-self.reliefsize))
 
     def draw_relief(self, sheet, rect, style):
         x, y, xx, yy = rect[0], rect[1], rect[0]+rect[2], rect[1]+rect[3]
@@ -192,17 +210,16 @@ class ToggleButton(Button):
 
             if doMouseclick:
                 if self.SWITCH is True:
-                    retval.append("toggle_on")
+                    retval.append("toggle_off")
                     self.SWITCH = False
                 elif self.SWITCH is False:
-                    retval.append("toggle_off")
+                    retval.append("toggle_on")
                     self.SWITCH = True
                 retval.append("clicked")
                 
         return retval
 
-    def draw(self, sheet):
-        pygame.draw.rect(sheet, System.RED, self.rect)   
+    def draw(self, sheet):      
         if self.SWITCH is True:
             self.currentsize = (self.pressed_gfx.get_width(), self.pressed_gfx.get_height())
             sheet.blit(self.pressed_gfx, self.rect)
@@ -213,10 +230,12 @@ class ToggleButton(Button):
             self.draw_relief(sheet, self.rect, "normal")
         if self.buttonHovered:
             pass
-
+            
+        if self.overlay_gfx is not None:
+            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx, self.rect))
         if self.text is not None:
-            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))     
- 
+            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))
+
 
 text = Text(Stats.Organic["Health Aura"].value)
 

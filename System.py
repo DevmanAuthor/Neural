@@ -22,6 +22,6 @@ def Quit():
 
 
 width, height = 640, 480
-screen = pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 render_sheet = pygame.Surface((width/2, height/2))
 

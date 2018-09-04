@@ -23,12 +23,12 @@ class MainMenu(Director.Scene):
         if "started" in CentralMenu.Handle_Events(self, event):
             self.Change_Scene(GameScene)
         if "cycle" in ControlBar.Handle_Events(self, event):
-            self.Change_Scene(Game_Scene)
+            self.Change_Scene(GameScene)
 
     def Draw(self, sheet):
         CentralMenu.Draw(self, sheet)
         ControlBar.Draw(self, sheet)
-
+        
 
 class Game_Scene(Director.Scene):
     def __init__(self, active=False):
