@@ -34,3 +34,4 @@ class Scene_Manager(dict):
     def change_scene(self, scene, *args):
         self.current_scene = scene
         self.current_scene.load(args)
+
