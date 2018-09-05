@@ -26,6 +26,7 @@ class MainMenu(Director.Scene):
             self.Change_Scene(GameScene)
 
     def Draw(self, sheet):
+        System.screen.blit(self.Background, (0, 0))
         CentralMenu.Draw(self, sheet)
         ControlBar.Draw(self, sheet)
         

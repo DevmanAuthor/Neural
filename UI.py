@@ -10,6 +10,21 @@ import pygbutton
 pygame.init()
 
 
+class Frame(object):
+    def __init__(self, gfx, pos):
+        self.gfx = Tool.load_image(gfx)
+        self.pos = pos
+    
+    def move(self, x, y):
+        self.pos = (self.pos[0] + x, self.pos[1] + y)
+
+    def place(self, x, y):
+        self.pos = (x, y)
+
+    def draw(self, sheet):
+        sheet.blit(self.gfx, self.pos)
+
+
 class Text(object):
     def __init__(self, string, color=System.WHITE, font=pygame.font.SysFont(None, 15), pos=(0, 0)):
         self.font = font
@@ -133,10 +148,10 @@ class Button(object):
             self.draw_relief(sheet, self.rect, "normal")
 
         if self.overlay_gfx is not None:
-            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx, self.rect))
+            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx.get_size(), self.rect))
         
         if self.text is not None:
-            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))        
+            sheet.blit(self.text.obj, Tool.center(self.text.obj.get_size(), self.rect))        
 
     def scale(self, w, h, overscale=False, w2=1, h2=1):
         scale = (int(w/w2), int(h/h2))
@@ -158,28 +173,28 @@ class Button(object):
     def draw_relief(self, sheet, rect, style):
         x, y, xx, yy = rect[0], rect[1], rect[0]+rect[2], rect[1]+rect[3]
         if style == "normal":
-            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy-1), self.reliefsize)
-            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx-1, y), self.reliefsize) 
-            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y-1), self.reliefsize)
-            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x-1, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx, y), self.reliefsize) 
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x, yy), self.reliefsize)
         elif style == "pressed":
-            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (x, yy-1), self.reliefsize)
-            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (xx-1, y), self.reliefsize) 
-            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx, y-1), self.reliefsize)
-            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (x-1, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (xx, y), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (xx, yy), (x, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (x, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (x, y), (xx, y), self.reliefsize) 
         elif style == "hover":
-            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy-1), self.reliefsize)
-            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx-1, y), self.reliefsize) 
-            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y-1), self.reliefsize)
-            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x-1, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (x, yy), self.reliefsize)
+            pygame.draw.line(sheet, System.LIGHTGRAY, (x, y), (xx, y), self.reliefsize) 
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y), self.reliefsize)
+            pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x, yy), self.reliefsize)
 
     rect = property(get_rect)
 
 
 class ToggleButton(Button):
-    def __init__(self, x=0, y=0, overlay=None, text=None, font=pygame.font.SysFont(None, 12), normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
+    def __init__(self, Toggle=False, x=0, y=0, overlay=None, text=None, font=pygame.font.SysFont(None, 12), normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
         super(ToggleButton, self).__init__(x, y, overlay, text, font, normal, pressed, hover)
-        self.SWITCH = False
+        self.SWITCH = Toggle
         self.doMouseclick = False
 
     def handle_events(self, event):
@@ -232,9 +247,9 @@ class ToggleButton(Button):
             pass
             
         if self.overlay_gfx is not None:
-            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx, self.rect))
+            sheet.blit(self.overlay_gfx, Tool.center(self.overlay_gfx.get_size(), self.rect))
         if self.text is not None:
-            sheet.blit(self.text.obj, Tool.center(self.text.obj, self.rect))
+            sheet.blit(self.text.obj, Tool.center(self.text.obj.get_size(), self.rect))
 
 
 text = Text(Stats.Organic["Health Aura"].value)

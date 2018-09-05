@@ -28,8 +28,6 @@ class SceneManager(list, object):
         self.scene_listing = scene_listing
         for i in scene_listing:
             self.append(i)
-            print(i)
-        print(self)
 
     def Handle_Scene_Events(self, event):
         for i in self:
