@@ -18,17 +18,17 @@ SceneManager = Director.SceneManager(Scenes.List)
 
 
 def Run():
+    System.Load()
     System.screen.fill(System.BLACK)
     while SceneManager is not None:
-        Scenes.Update_Scenes()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 System.Quit()
-            SceneManager.Handle_Scene_Events(event)
+            SceneManager.handle_events(event)
 
         SceneManager.check_active()
         pygame.transform.scale2x(System.render_sheet, System.screen)
-        SceneManager.Draw(System.screen)
+        SceneManager.draw(System.screen)
         pygame.display.flip()
     
 

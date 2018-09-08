@@ -7,7 +7,7 @@ BugBear = Entity.Organism("Some Guy", Stats.Being, (51, 51), "gfx/guy.png")
 List = {BugBear: 5}
 
 
-def Load():
+def load():
     BugBear.body.create("Head", "Torso", "Arm")
 
 

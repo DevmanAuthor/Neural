@@ -11,6 +11,15 @@ GREEN = (0, 225, 0)
 BLUE = (0, 0, 225)
 R_PINK = (255, 85, 255)
 
+Mixer = None
+Default_Font = None
+
+
+def Load():
+    pygame.init()
+    Default_Font = pygame.font.SysFont(None, 12)
+    Mixer = pygame.mixer
+
 
 def Quit():
         pygame.display.quit()

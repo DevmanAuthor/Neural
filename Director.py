@@ -3,23 +3,23 @@ class Scene():
         self.nextscene = self
         self.active = active
 
-    def Handle_Events(self, events):
+    def handle_events(self, events):
         raise NotImplementedError
     
-    def Update():
+    def update():
         raise NotImplementedError
 
-    def Draw(self, sheet):
+    def draw(self, sheet):
         raise NotImplementedError
 
-    def Birth_Scene(self, scene):
+    def birth_Scene(self, scene):
         scene.active = True
         
-    def Change_Scene(self, scene):
+    def change_scene(self, scene):
         scene.active = True
-        self.Kill(self)
+        self.kill(self)
     
-    def Kill(self, scene):
+    def kill(self, scene):
         scene.active = False
 
 
@@ -29,9 +29,9 @@ class SceneManager(list, object):
         for i in scene_listing:
             self.append(i)
 
-    def Handle_Scene_Events(self, event):
+    def handle_events(self, event):
         for i in self:
-                i.Handle_Events(event)  
+                i.handle_events(event)  
 
     def check_active(self):
         for i in self:
@@ -41,8 +41,8 @@ class SceneManager(list, object):
             if i.active is True and i not in self:
                 self.append(i)
   
-    def Draw(self, sheet):
+    def draw(self, sheet):
         for i in range(len(self)):
-            self[i].Draw(sheet)
+            self[i].draw(sheet)
             
         
