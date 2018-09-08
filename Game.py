@@ -11,6 +11,7 @@ import Elements
 import Scenes
 import UI
 import Tool
+import Image
 
 
 SceneManager = Director.SceneManager(Scenes.List)

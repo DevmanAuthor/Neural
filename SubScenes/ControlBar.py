@@ -8,7 +8,7 @@ def Load(self):
         self.Buttons["Cycle"].place(System.screen.get_width()-(self.Buttons["Cycle"].rect.width+self.Buttons["Cycle"].reliefsize), 0)
 
         self.Buttons["Exit"] = UI.Button(0, 0, "gfx/UI/eyexit.png")
-        self.Buttons["Exit"].scale(50, 40, True, 2, 2)
+        self.Buttons["Exit"].scale(40, 30, True, 1.4, 1.4)
         self.Buttons["Exit"].place(System.width-self.Buttons["Exit"].rect.width-self.Buttons["Exit"].reliefsize, System.height-self.Buttons["Exit"].rect.height-self.Buttons["Exit"].reliefsize)
 
 

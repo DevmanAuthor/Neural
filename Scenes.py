@@ -5,6 +5,7 @@ import UI
 import Entity
 import Director
 import Creatures
+import Image
 from SubScenes import ControlBar, CentralMenu
 
 
@@ -12,7 +13,7 @@ class MainMenu(Director.Scene):
     def __init__(self, active=False):
         super(MainMenu, self).__init__(active)
         self.Buttons = dict()
-        self.Background = Tool.load_image("gfx/UI/MenuBackground.png")
+        self.Background = Image.Sprite("gfx/UI/MenuBackground.png")
         self.Load()
 
     def Load(self): 
@@ -25,8 +26,8 @@ class MainMenu(Director.Scene):
         if "cycle" in ControlBar.Handle_Events(self, event):
             self.Change_Scene(GameScene)
 
-    def Draw(self, sheet):
-        System.screen.blit(self.Background, (0, 0))
+    def Draw(self, sheet): 
+        self.Background.draw(sheet)
         CentralMenu.Draw(self, sheet)
         ControlBar.Draw(self, sheet)
         

@@ -3,10 +3,7 @@ import os
 import Tool
 import random
 import Stats
-
-
-class Drawable_Object():
-    pass
+import Image
 
 
 class Basic():
@@ -22,18 +19,11 @@ class Basic():
         return (self.name + " " + str(self.stats))
 
 
-class Basic_gfx(Basic, Drawable_Object):
+class Basic_Drawable(Basic, Image.Sprite):
     def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
-        super(Basic_gfx, self).__init__(name, stats)
-        self.gfx = Tool.load_image(gfx)
-        self.pos = pos
+        super(Basic_Drawable, self).__init__(gfx, pos)
+        super(Basic_Drawable, self).__init__(name, stats)
         self.stats = stats
-
-    def place(self, pos):
-        self.pos = pos
-
-    def draw(self, sheet):
-        sheet.blit(self.gfx, self.pos)
     
     def debug_self(self):
         return (self.name + " " + str(self.pos) + " " + self.stats)
@@ -81,7 +71,7 @@ class Brain(Limb):
         pass
 
 
-class Organism(Basic_gfx):
+class Organism(Basic_Drawable):
     def __init__(self, *args):
         super(Organism, self).__init__(*args)
         self.body = Skeleton()

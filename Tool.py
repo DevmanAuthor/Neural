@@ -2,6 +2,20 @@ import pygame
 import sys
 
 
+class Simple():
+    def __init__(self, x, y):
+        self.place(x, y)
+
+    def place(self, x, y):
+        self.pos = (x, y) 
+
+    def set_pos(self, pos):
+        self.pos = pos
+
+    def move(self, x, y):
+        self.pos = (self.pos[0] + x, self.pos[1] + y)
+
+
 def tup_sub(a, b):
     return (a[0]-b[0], a[1]-b[1])
 

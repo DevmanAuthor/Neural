@@ -31,11 +31,11 @@ class World():
         return layercontents
 
     def debug_entities(self):
-        listofobj = self.debug_layers()
+        listofgfx = self.debug_layers()
         for i in range(self.layersize):
             for j in range(len(self.layers[i])):
-                listofobj += "Layer Position: " + str([i][j]) + self.layers[i][j].debug_self()
-        return listofobj
+                listofgfx += "Layer Position: " + str([i][j]) + self.layers[i][j].debug_self()
+        return listofgfx
 
     def Run(self, sheet):
         self.draw(sheet)
