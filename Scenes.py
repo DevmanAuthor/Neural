@@ -39,6 +39,7 @@ class Game_Scene(Director.Scene):
         self.load()
 
     def load(self): 
+        Creatures.load()
         ControlBar.load(self)
         
     def handle_events(self, event):

@@ -11,7 +11,7 @@ def load(self):
 
         self.Buttons["WindowControl"] = UI.ToggleButton(False, 0, 0, "gfx/UI/maximize.png", None, True)
         self.Buttons["WindowControl"].scale(20, 20, True, 1.5, 1.5)
-        self.Buttons["WindowControl"].place(self.Buttons["Cycle"].pos[0] - self.Buttons["Cycle"].currentsize[0], 0)
+        self.Buttons["WindowControl"].place(self.Buttons["Cycle"].pos[0] - self.Buttons["Cycle"].size[0], 0)
 
 
 def handle_events(self, event):
@@ -21,7 +21,6 @@ def handle_events(self, event):
             retval.append("cycle")
 
         ev = self.Buttons["WindowControl"].handle_events(event)
-        print(ev)
         if 'on' in ev:
             System.screen = pygame.display.set_mode((System.width, System.height), pygame.FULLSCREEN)
         elif 'off' in ev:

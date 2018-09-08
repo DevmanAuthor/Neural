@@ -24,7 +24,7 @@ class Text(Image.Sprite, Tool.Simple, object):
         if size is None:
             self._gfx = self.font.render(self.str, True, self.color)
         else:
-            self._gfx = pygame.transform.scale(self._gfx, size)
+            self._gfx = pygame.transform.scale(self._gfx, )
     
     def set_text(self, string):
         self.str = str(string)
@@ -39,7 +39,7 @@ class Button(Tool.Simple, object):
         self.normal = Image.Sprite(normal)
         self.pressed = Image.Sprite(pressed)
         self.hover = Image.Sprite(hover)
-        self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
+        self.size = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
         self.overlay = overlay
         self.set_rect(0, 0, 0, 0)
         
@@ -63,7 +63,7 @@ class Button(Tool.Simple, object):
         
         self.scale(self.text.gfx.get_rect().width+self.reliefsize+10, self.text.gfx.get_rect().height+self.reliefsize+10)
         
-    def set_reliefsize(size):
+    def set_reliefsize(self, size):
         self.reliefsize = size
 
     def set_overlay(self, string, w=None, h=None):
@@ -106,22 +106,22 @@ class Button(Tool.Simple, object):
         return retval
 
     def get_rect(self):
-        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.currentsize[0], self.currentsize[1])
+        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
         return self._rect
 
     def draw(self, sheet):
         if self.isbuttonPressed:
-            self.currentsize = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
+            self.size = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
             sheet.blit(self.pressed.gfx, self.rect)
             self.draw_relief(sheet, self.rect, "pressed")
 
         elif self.isbuttonHovered:
-            self.currentsize = (self.hover.gfx.get_width(), self.hover.gfx.get_height())
+            self.size = (self.hover.gfx.get_width(), self.hover.gfx.get_height())
             sheet.blit(self.hover.gfx, self.rect)
             self.draw_relief(sheet, self.rect, "hover")
 
         else:
-            self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
+            self.size = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
             sheet.blit(self.normal.gfx, self.rect)
             self.draw_relief(sheet, self.rect, "normal")
 
@@ -138,7 +138,7 @@ class Button(Tool.Simple, object):
         self.hover.gfx = pygame.transform.scale(self.normal.gfx, (w, h))
         if overscale and self.overlay is not None:
             self.scale_overlay(w2, h2)
-        self.currentsize = (w, h)
+        self.size = (w, h)
 
     def scale_overlay(self, w, h):
         w = int(self.normal.gfx.get_width()/w)
@@ -213,11 +213,11 @@ class SwitchButton(Button):
 
     def draw(self, sheet):   
         if self.Toggle is True:
-            self.currentsize = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
+            self.size = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
             sheet.blit(self.pressed.gfx, self.rect)
             self.draw_relief(sheet, self.rect, "pressed")
         elif self.Toggle is False:
-            self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
+            self.size = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
             sheet.blit(self.normal.gfx, self.rect)
             self.draw_relief(sheet, self.rect, "normal")
                 

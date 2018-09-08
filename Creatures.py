@@ -11,3 +11,6 @@ def load():
     BugBear.body.create("Head", "Torso", "Arm")
 
 
+def draw(sheet):
+    for i in List:
+        i.draw(sheet)

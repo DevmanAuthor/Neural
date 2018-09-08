@@ -6,25 +6,31 @@ import UI
 
 
 def load(self): 
-    self.Menu_Frame = Image.Sprite("gfx/UI/menuback.png", (50, 50))
+    self.Menu_Frame = Image.Sprite("gfx/UI/menuback.png", (50, 100))
     self.Menu_Frame.scale(160, 240)
-    self.Menu_Frame.set_pos(Tool.center(self.Menu_Frame.gfx.get_size(), System.screen.get_rect()))
+    # self.Menu_Frame.set_pos(Tool.center(self.Menu_Frame.gfx.get_size(), System.screen.get_rect()))
+
+    self.Buttons["Create"] = UI.Button()
+    self.Buttons["Create"].set_text("Create", pygame.font.Font("font/homespun.ttf", 15))
+    self.Buttons["Create"].set_pos(Tool.stepoffcenter((self.Buttons["Create"].size[0], self.Buttons["Create"].size[0]-4), self.Menu_Frame.rect, 0, -1))
 
     self.Buttons["Start"] = UI.Button()
     self.Buttons["Start"].set_text("Embark", pygame.font.Font("font/homespun.ttf", 15))
-    self.Buttons["Start"].set_pos(Tool.stepoffcenter(self.Buttons["Start"].currentsize, self.Menu_Frame.rect, 0, -2))
+    self.Buttons["Start"].set_pos(Tool.stepoffcenter(self.Buttons["Start"].size, self.Menu_Frame.rect, 0, -1))
 
     self.Buttons["Sound"] = UI.ToggleButton(True, 0, 0, "gfx/UI/sound_on.png")
     self.Buttons["Sound"].scale(20, 20, True, 1.2, 1.2)
-    self.Buttons["Sound"].set_pos(Tool.stepoffcenter(self.Buttons["Sound"].currentsize, self.Menu_Frame.rect, -2, 4))
+    self.Buttons["Sound"].set_pos(Tool.stepoffcenter(self.Buttons["Sound"].size, self.Menu_Frame.rect, -2, 4))
 
     self.Buttons["Exit"] = UI.Button(0, 0, "gfx/UI/eyexit.png")
     self.Buttons["Exit"].scale(20, 20, True, 1.2, 1.2)
-    self.Buttons["Exit"].set_pos(Tool.stepoffcenter(self.Buttons["Sound"].currentsize, self.Menu_Frame.rect, 2, 4))
+    self.Buttons["Exit"].set_pos(Tool.stepoffcenter(self.Buttons["Sound"].size, self.Menu_Frame.rect, 2, 4))
 
 
 def handle_events(self, event):
     retval = []
+    if "clicked" in self.Buttons["Create"].handle_events(event):
+        pass
     if "clicked" in self.Buttons["Start"].handle_events(event):
         retval.append("started")
     if 'clicked' in self.Buttons["Exit"].handle_events(event):
@@ -64,6 +70,7 @@ def draw(self, sheet):
         Image.Decor.draw(sheet, 1, Tool.stepoff(Image.Decor[0].get_size(), (xx-Image.Decor[1].get_width(), y), 0, i+1))  
     
     self.Buttons["Start"].draw(sheet)
+    self.Buttons["Create"].draw(sheet)
     self.Buttons["Sound"].draw(sheet)
     self.Buttons["Exit"].draw(sheet)
     pygame.draw.rect(sheet, System.RED, self.Menu_Frame.rect, 2)
