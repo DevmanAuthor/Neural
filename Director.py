@@ -6,7 +6,7 @@ class Scene():
     def handle_events(self, events):
         raise NotImplementedError
     
-    def update():
+    def update(self):
         raise NotImplementedError
 
     def draw(self, sheet):
@@ -40,7 +40,11 @@ class SceneManager(list, object):
         for i in self.scene_listing:
             if i.active is True and i not in self:
                 self.append(i)
-  
+
+    def update(self):
+        for i in self:
+            i.update()
+
     def draw(self, sheet):
         for i in range(len(self)):
             self[i].draw(sheet)

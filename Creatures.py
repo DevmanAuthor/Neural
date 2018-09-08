@@ -1,8 +1,8 @@
 import Entity
 import Stats
+import System
 
-
-BugBear = Entity.Organism("Some Guy", Stats.Being, (0, 0), "gfx/guy.png")
+BugBear = Entity.Organism("Some Guy", Stats.Being, (System.width/2, System.height/2), "gfx/guy.png")
 
 List = {BugBear: 5}
 
@@ -12,4 +12,10 @@ def load():
 
 
 def draw(sheet):
-    BugBear.draw(sheet)
+    for i in List:
+        i.draw(sheet)
+
+
+def run():
+    for i in List:
+        i.run()

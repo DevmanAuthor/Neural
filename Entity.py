@@ -6,7 +6,7 @@ import Stats
 import Image
 
 
-class Basic():
+class Basic(Tool.Simple):
     def __init__(self, name, stats=Stats.Fundamental):
         self.name = name
         self.stats = stats
@@ -63,11 +63,8 @@ class Brain(Limb):
     def __init__(self, *args):
         super(Brain, self).__init__(*args)
 
-    def Dream(self, body):
-        pass
-    
-    def Determine_Movement():
-        pass
+    def dream(self, body):
+        return random.randint(-100, 100)
 
 
 class Organism(Basic_Drawable):
@@ -77,8 +74,12 @@ class Organism(Basic_Drawable):
         self.body.add_brain("Brain")
         self.Composition = ""
     
+    def determine_movement(self):
+        self.move(random.randint(-5, 5), random.randint(-5, 5))
+
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
 
-    def Run(self):
-        self.body[0].Dream(self.body)
+    def run(self):
+        self.body[0].dream(self.body)
+        self.determine_movement()

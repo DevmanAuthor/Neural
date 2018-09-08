@@ -16,6 +16,9 @@ class MainMenu(Director.Scene):
         self.Background = Image.Sprite("gfx/UI/MenuBackground.png")
         self.load()
 
+    def update(self):
+        pass
+
     def load(self): 
         ControlBar.load(self)
         CentralMenu.load(self)
@@ -42,6 +45,9 @@ class Game_Scene(Director.Scene):
         Creatures.load()
         ControlBar.load(self)
         
+    def update(self):
+        Creatures.run()
+
     def handle_events(self, event):
         if "cycle" in ControlBar.handle_events(self, event):
             self.change_scene(MainMenu)

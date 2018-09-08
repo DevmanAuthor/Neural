@@ -27,6 +27,7 @@ def Run():
             SceneManager.handle_events(event)
 
         SceneManager.check_active()
+        SceneManager.update()
         pygame.transform.scale2x(System.render_sheet, System.screen)
         SceneManager.draw(System.screen)
         pygame.display.flip()
