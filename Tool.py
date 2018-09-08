@@ -38,7 +38,24 @@ def clamp(n, minn, maxn):
 
 
 def center(size, rect):
-        return (rect.centerx-size[0]/2, rect.centery-size[1]/2)
+        return (rect.centerx - size[0]/2, rect.centery - size[1]/2)
+
+
+def stepoffcenter(size, rect, x, y):
+        pos = center(size, rect)
+        return stepoff(size, pos, x, y)
+
+
+def stepoff(size, pos, x, y):
+        if x == 0:
+            xx = pos[0]
+        else:
+            xx = pos[0] + size[0] * x
+        if y == 0:
+            yy = pos[1]
+        else:
+            yy = pos[1] + size[1] * y    
+        return (xx, yy)
 
 
 def load_image(picdir): return pygame.image.load(picdir)

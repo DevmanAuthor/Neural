@@ -10,8 +10,16 @@ class Drawable():
 class Sprite(Drawable, Tool.Simple, object):
     def __init__(self, gfx, pos=(0, 0)):
         self.load(gfx)
+        self.lastx = None
+        self.lasty = None
         self.pos = pos
-
+        
+    def get_rect(self):
+        self._rect = pygame.Rect(self.pos[0], self.pos[1], self.gfx.get_width(), self.gfx.get_height())
+        self.lastx = self._rect[0] + self._rect[2]
+        self.lasty = self._rect[1] + self._rect[3]
+        return self._rect         
+    
     def load(self, gfx):
         if isinstance(gfx, str):
             self.filename = gfx
@@ -28,11 +36,12 @@ class Sprite(Drawable, Tool.Simple, object):
     def scale(self, w, h):
         self.gfx = pygame.transform.scale(self.gfx, (w, h))
         
+    rect = property(get_rect)
 
-class SpriteSheet():
+
+class SpriteSheet(list, object):
     def __init__(self, filename, rects):
         self.sprite_file = Tool.load_image(filename)
-        self.image = list()
         self.prepare(rects)
     
     def get_image(self, rect):
@@ -45,16 +54,15 @@ class SpriteSheet():
         for i in range(len(rects)): 
             print(rects[i])
             print(self.get_image(rects[i]))
-            self.image.append(Sprite(self.get_image(rects[i])))
-            self.image[i].place(rects[i][0], rects[i][1])
+            self.append(self.get_image(rects[i]))
 
     def debug_sprite_sheet(self, sheet):
-        for i in range(len(self.images)):
-            pygame.draw.rect(self.images[i].gfx, System.RED, self.images[i].gfx.get_rect(), 2)
-            self.image[i].draw(sheet)
+        for i in range(len(self)):
+            pygame.draw.rect(self.sprite_file, System.RED, self[i].get_rect(), 2)
+            sheet.blit(self.sprite_file, (0, 0))
 
     def draw(self, sheet, index, pos):
-        sheet.blit(self.image[index].gfx, pos)
+        sheet.blit(self[index], pos)
 
         
 Decor = SpriteSheet("gfx/UI/decor_basic.png", ([0, 0, 16, 16], [16, 0, 16, 16]))

@@ -41,6 +41,7 @@ class Button(Tool.Simple, object):
         self.hover = Image.Sprite(hover)
         self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
         self.overlay = overlay
+        self.set_rect(0, 0, 0, 0)
         
         self.isbuttonPressed = False
         self.isbuttonHovered = False
@@ -52,7 +53,10 @@ class Button(Tool.Simple, object):
             self.set_overlay(overlay)
         if text is not None:
             self.set_text(text)
-    
+
+    def set_rect(self, x, y, w, h):
+        self._rect = pygame.Rect(x, y, w, h) 
+
     def set_text(self, string, font=pygame.font.SysFont(None, 15), color=System.BLACK):
         self.text = Text(string, color, font)
         self.text.pos = (self.rect.centerx-self.text.gfx.get_width(), self.rect.centery-self.text.gfx.get_height())
@@ -162,15 +166,13 @@ class Button(Tool.Simple, object):
             pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (xx, y), self.reliefsize)
             pygame.draw.line(sheet, System.DARKGRAY, (xx, yy), (x, yy), self.reliefsize)
 
-    rect = property(get_rect)
+    rect = property(get_rect, set_rect)
 
 
-class ToggleButton(Button):
-    def __init__(self, Toggle=False, x=0, y=0, overlay=None, text=None, bolding=True, font=System.Default_Font, normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
-        super(ToggleButton, self).__init__(x, y, overlay, text, font, normal, pressed, hover)
-        self.SWITCH = Toggle
-        self.doMouseclick = False
-        self.BOLDING = bolding
+class SwitchButton(Button):
+    def __init__(self, Toggle=False, x=0, y=0, overlay=None, text=None, font=System.Default_Font, normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
+        super(SwitchButton, self).__init__(x, y, overlay, text, font, normal, pressed, hover)
+        self.Toggle = Toggle
 
     def handle_events(self, event):
         retval = []
@@ -197,33 +199,37 @@ class ToggleButton(Button):
                 if self.lastMouseevent:
                     doMouseclick = True
                 self.lastMouseevent = False
-    
+     
             if doMouseclick:
-                if self.SWITCH is True:
-                    retval.append("toggle_off")
-                    self.SWITCH = False
-                elif self.SWITCH is False:
-                    retval.append("toggle_on")
-                    self.SWITCH = True
+                if self.Toggle is True:
+                    retval.append("off")
+                    self.Toggle = False
+                elif self.Toggle is False:
+                    retval.append("on")
+                    self.Toggle = True
                 retval.append("clicked")
                 
         return retval
 
     def draw(self, sheet):   
-        if self.BOLDING is False:   
-            if self.SWITCH is True:
-                self.currentsize = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
-                sheet.blit(self.pressed.gfx, self.rect)
-                self.draw_relief(sheet, self.rect, "pressed")
-            elif self.SWITCH is False:
-                self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
-                sheet.blit(self.normal.gfx, self.rect)
-                self.draw_relief(sheet, self.rect, "normal")
+        if self.Toggle is True:
+            self.currentsize = (self.pressed.gfx.get_width(), self.pressed.gfx.get_height())
+            sheet.blit(self.pressed.gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "pressed")
+        elif self.Toggle is False:
+            self.currentsize = (self.normal.gfx.get_width(), self.normal.gfx.get_height())
+            sheet.blit(self.normal.gfx, self.rect)
+            self.draw_relief(sheet, self.rect, "normal")
                 
-            if self.overlay is not None:
-                sheet.blit(self.overlay.gfx, Tool.center(self.overlay.gfx.get_size(), self.rect))
-            if self.text is not None:
-                sheet.blit(self.text.gfx, Tool.center(self.text.gfx.get_size(), self.rect))
-        else:
-            super(ToggleButton, self).draw(sheet)
+        if self.overlay is not None:
+            sheet.blit(self.overlay.gfx, Tool.center(self.overlay.gfx.get_size(), self.rect))
+        if self.text is not None:
+            sheet.blit(self.text.gfx, Tool.center(self.text.gfx.get_size(), self.rect))
 
+
+class ToggleButton(SwitchButton):
+    def __init__(self, Toggle=False, x=0, y=0, overlay=None, text=None, font=System.Default_Font, normal="gfx/UI/Natural/BtnNormal.png", pressed="gfx/UI/Natural/BtnNormal.png", hover="gfx/UI/Natural/BtnHover.png"):
+        super(ToggleButton, self).__init__(Toggle, x, y, overlay, text, font, normal, pressed, hover)
+
+    def draw(self, sheet):
+        Button.draw(self, sheet)
