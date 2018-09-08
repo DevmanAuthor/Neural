@@ -21,10 +21,9 @@ class Basic():
 
 class Basic_Drawable(Basic, Image.Sprite):
     def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
-        super(Basic_Drawable, self).__init__(gfx, pos)
-        super(Basic_Drawable, self).__init__(name, stats)
-        self.stats = stats
-    
+        Basic.__init__(self, name, stats)
+        Image.Sprite.__init__(self, gfx, pos)
+
     def debug_self(self):
         return (self.name + " " + str(self.pos) + " " + self.stats)
 
@@ -72,8 +71,8 @@ class Brain(Limb):
 
 
 class Organism(Basic_Drawable):
-    def __init__(self, *args):
-        super(Organism, self).__init__(*args)
+    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
+        super(Organism, self).__init__(name, stats, pos, gfx)
         self.body = Skeleton()
         self.body.add_brain("Brain")
         self.Composition = ""

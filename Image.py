@@ -9,7 +9,8 @@ class Drawable():
 
 class Sprite(Drawable, Tool.Simple, object):
     def __init__(self, gfx, pos=(0, 0)):
-        self.load(gfx)
+  
+        self.gfx = self.load(gfx)
         self.lastx = None
         self.lasty = None
         self.pos = pos
@@ -22,11 +23,8 @@ class Sprite(Drawable, Tool.Simple, object):
     
     def load(self, gfx):
         if isinstance(gfx, str):
-            self.filename = gfx
-            self.gfx = Tool.load_image(gfx)
-        else:
-            self.gfx = gfx
-
+            return Tool.load_image(gfx)
+   
     def draw(self, sheet, rect=None):
         if rect is None:
             sheet.blit(self.gfx, self.pos)

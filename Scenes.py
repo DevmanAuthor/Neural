@@ -47,6 +47,7 @@ class Game_Scene(Director.Scene):
             self.change_scene(MainMenu)
  
     def draw(self, sheet):
+        Creatures.draw(sheet)
         ControlBar.draw(self, sheet)
         
 
