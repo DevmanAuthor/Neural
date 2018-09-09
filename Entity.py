@@ -4,6 +4,7 @@ import Tool
 import random
 import Stats
 import Image
+import System
 
 
 class Basic(Tool.Simple):
@@ -57,6 +58,13 @@ class Limb(Basic):
     def __init__(self, *args, stats=Stats.Organic):
         super(Limb, self).__init__(*args)
         self.stats = stats
+        self.signal = None
+
+    def recieve(self, signal):
+        self.signal = signal
+
+    def send(self, node, signal):
+        node.recieve(signal)
 
 
 class Brain(Limb):
@@ -64,7 +72,7 @@ class Brain(Limb):
         super(Brain, self).__init__(*args)
 
     def dream(self, body):
-        return random.randint(-100, 100)
+        return random.randint(-1000, 1000)
 
 
 class Organism(Basic_Drawable):
@@ -72,14 +80,44 @@ class Organism(Basic_Drawable):
         super(Organism, self).__init__(name, stats, pos, gfx)
         self.body = Skeleton()
         self.body.add_brain("Brain")
+        self.mind = self.body[0]
         self.Composition = ""
-    
-    def determine_movement(self):
-        self.move(random.randint(-5, 5), random.randint(-5, 5))
+        self.bounds = pygame.Rect(0, 0, System.width, System.height)
+
+    def travel(self):
+        if self.bounds.collidepoint(self.pos):
+            print("value: ", self.stats["Movement Inclination"].value)
+            self.pos = Tool.tup_add(self.pos, self.determine_velocity(self.stats["Movement Inclination"].value, 1))
+        else:
+            self.pos = Tool.pos_clamp(self.bounds, self.pos, 1)
+
+    def determine_velocity(self, i, factor):
+        if i == Stats.Compass["+"]:
+            return (0, 0)
+        elif i == Stats.Compass["N"]:
+            return (0, -factor)
+        elif i == Stats.Compass["NE"]:
+            return (factor, -factor)
+        elif i == Stats.Compass["E"]:
+            return (factor, 0)
+        elif i == Stats.Compass["SE"]:
+            return (factor, factor)
+        elif i == Stats.Compass["S"]:
+            return (0, factor)
+        elif i == Stats.Compass["SW"]:
+            return (-factor, factor)
+        elif i == Stats.Compass["W"]:
+            return (-factor, 0)
+        elif i == Stats.Compass["NW"]:
+            return (-factor, -factor)
 
     def debug_self(self):
         return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
 
     def run(self):
-        self.body[0].dream(self.body)
-        self.determine_movement()
+        self.mind.dream(self.body)
+        self.travel()
+        
+        print("pos: ", self.pos)
+        print("tire_rate: ", self.stats.tire_rate.value)
+        print("Energy: ", self.stats["Energy"])

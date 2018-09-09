@@ -1,6 +1,7 @@
 import random
 import Tool
 import math
+import enum 
 
 
 class Neuron():
@@ -20,9 +21,14 @@ class Neuron():
         self._value = value
 
 
+Compass = {'+': 0, 'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8}
+
+
+class Stat(dict, object):
+    pass
+
+
 Fundamental = {}
-
-
 Organic = {}
 Organic["Integrity"] = 100
 Organic["Relative Integrity"] = (Organic["Integrity"]-math.sqrt(Organic["Integrity"]), Organic["Integrity"]+math.sqrt(Organic["Integrity"]))
@@ -32,12 +38,11 @@ Organic["Stability"] = random.randint((Organic["Relative Integrity"][0] + Organi
 Organic["Death"] = bool(Organic["Integrity"] == 0)
 Organic["Health Aura"] = Neuron(Organic["Integrity"], (Organic["Relative Integrity"][0] - Organic["Pain"], Organic["Integrity"]), 1)
 
-Being = {}
-Being["Max/Min Thought"] = [0, 100]
+Being = Stat()
+
+Being["Max/Min Thought"] = Neuron(50, (0, 100), 5)
+Being.tire_rate = Neuron(0, (-1, 1), int(Being["Max/Min Thought"].value/50))
+Being["Energy"]. = 100 + Being.tire_rate.value
 Being["Integrity"] = 100
-Being["Pain"] = 0
-Being["Hunger"] = 10
-Being["Mental Stability"] = random.randint(0, Being["Integrity"])
-Being["Health Actual"] = int((Being["Integrity"] - Being["Pain"]) - (Being["Hunger"]/3))
-Being["Health Sentiment"] = Being["Health Actual"] + random.randint(0, 100)
-Being["Movement Inclination"] = Neuron(Being["Health Sentiment"] / 8, (0, 8), 1)
+Being["Movement Inclination"] = Neuron(Compass['+'], (Compass['+'], 8), 1)
+# ^should be removed since movement inclinations should be based on paths, areas, processing functions or general directions as well

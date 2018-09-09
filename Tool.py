@@ -65,3 +65,16 @@ def pyrect_sub(rect, value): return pygame.Rect(rect[0]-value, rect[1]-value, re
 
 
 def pyrect_extend(rect, value): return pygame.Rect(rect[0]+value, rect[1]+value, rect[2]+value, rect[3]+value)
+
+
+def pos_clamp(bounds, point, factor):
+    x, y = point[0], point[1]
+    if point[0] <= bounds[0]:
+        x += factor
+    if point[1] <= bounds[1]:
+        y += factor
+    if point[0] >= bounds[2]:
+        x -= factor
+    if point[1] >= bounds[3]:
+        y -= factor
+    return (x, y)
