@@ -39,10 +39,9 @@ Organic["Death"] = bool(Organic["Integrity"] == 0)
 Organic["Health Aura"] = Neuron(Organic["Integrity"], (Organic["Relative Integrity"][0] - Organic["Pain"], Organic["Integrity"]), 1)
 
 Being = Stat()
-
 Being["Max/Min Thought"] = Neuron(50, (0, 100), 5)
 Being.tire_rate = Neuron(0, (-1, 1), int(Being["Max/Min Thought"].value/50))
-Being["Energy"]. = 100 + Being.tire_rate.value
+# Being["Energy"] = Being.tire_rate.value
 Being["Integrity"] = 100
 Being["Movement Inclination"] = Neuron(Compass['+'], (Compass['+'], 8), 1)
 # ^should be removed since movement inclinations should be based on paths, areas, processing functions or general directions as well

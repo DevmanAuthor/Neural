@@ -82,6 +82,17 @@ class Organism(Basic_Drawable):
         self.body.add_brain("Brain")
         self.mind = self.body[0]
         self.Composition = ""
+
+    def debug_self(self):
+        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
+
+    def run(self):
+        self.mind.dream(self.body)
+
+
+class Walkable(Organism):
+    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/guy.png"):
+        super(Walkable, self).__init__(name, stats, pos, gfx)
         self.bounds = pygame.Rect(0, 0, System.width, System.height)
 
     def travel(self):
@@ -111,13 +122,9 @@ class Organism(Basic_Drawable):
         elif i == Stats.Compass["NW"]:
             return (-factor, -factor)
 
-    def debug_self(self):
-        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
-
     def run(self):
-        self.mind.dream(self.body)
+        super(Walkable, self).run()
         self.travel()
         
         print("pos: ", self.pos)
         print("tire_rate: ", self.stats.tire_rate.value)
-        print("Energy: ", self.stats["Energy"])

@@ -2,7 +2,7 @@ import Entity
 import Stats
 import System
 
-BugBear = Entity.Organism("Some Guy", Stats.Being, (System.width/2, System.height/2), "gfx/guy.png")
+BugBear = Entity.Walkable("Some Guy", Stats.Being, (System.width/2, System.height/2), "gfx/guy.png")
 
 List = {BugBear: 5}
 
