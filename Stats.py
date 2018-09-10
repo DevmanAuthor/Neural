@@ -23,5 +23,6 @@ Being["Max/Min Thought"] = Tool.Unstable_Value(50, (1, 100), 5)
 Being["Tire_Rate"] = Tool.Bounded_Value(0, (-1, 1))
 Being["Energy"] = Tool.Bounded_Value(100, (0, 110))
 Being["Integrity"] = 100
+Being["Speed"] = Tool.Bounded_Value(5, (0, 10))
 Being["Movement Inclination"] = Tool.Unstable_Value(Compass['+'], (Compass['+'], 8), 1)
 # ^should be removed since movement inclinations should be based on paths, areas, processing functions or general directions as well

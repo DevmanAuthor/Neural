@@ -7,7 +7,7 @@ class Drawable():
     pass
 
 
-class Sprite(Drawable, Tool.Simple, object):
+class Sprite(Drawable, Tool.Simple):
     def __init__(self, gfx, pos=(0, 0)):
   
         self.gfx = self.load(gfx)

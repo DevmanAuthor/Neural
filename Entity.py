@@ -5,9 +5,10 @@ import random
 import Stats
 import Image
 import System
+import math
 
 
-class Basic(Tool.Simple):
+class Basic():
     def __init__(self, name, stats=Stats.Fundamental):
         self.name = name
         self.stats = stats
@@ -43,12 +44,28 @@ class Basic(Tool.Simple):
 
 
 class Basic_Drawable(Basic, Image.Sprite):
-    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
+    def __init__(self, name, stats=Stats.Fundamental, pos=(System.width/2, System.height/2), bounds=(0, 0, System.width, System.height), gfx="gfx/ball.png"):
         Basic.__init__(self, name, stats)
         Image.Sprite.__init__(self, gfx, pos)
+        self.bounds = bounds
+        self.pos = Tool.Bounded_Point(pos, bounds)
+
+    def get_rect(self):
+        self._rect = Tool.Bounded_Rect((self.pos.value[0], self.pos.value[1], self.gfx.get_width(), self.gfx.get_height()), self.bounds)
+        self.lastx = self._rect._value[0] + self._rect._value[2]
+        self.lasty = self._rect._value[1] + self._rect._value[3]
+        return self._rect         
 
     def debug_self(self):
-        return (self.name + " " + str(self.pos) + " " + self.stats_formatted)
+        return (self.name + " " + str(self.pos.value) + " " + self.stats_formatted)
+
+    def draw(self, sheet, rect=None):
+        if rect is None:
+            sheet.blit(self.gfx, self.pos.value)
+        else:
+            sheet.blit(self.gfx, rect)
+            
+    rect = property(get_rect)
 
 
 class Skeleton(list):
@@ -80,13 +97,6 @@ class Limb(Basic):
     def __init__(self, *args, stats=Stats.Organic):
         super(Limb, self).__init__(*args)
         self.stats = stats
-        self.signal = None
-
-    def recieve(self, signal):
-        self.signal = signal
-
-    def send(self, node, signal):
-        node.recieve(signal)
 
 
 class Brain(Limb):
@@ -98,25 +108,25 @@ class Brain(Limb):
 
 
 class Organism(Basic_Drawable):
-    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/ball.png"):
-        super(Organism, self).__init__(name, stats, pos, gfx)
+    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), bounds=(0, 0, System.width, System.height), gfx="gfx/ball.png"):
+        super(Organism, self).__init__(name, stats, pos, bounds, gfx)
         self.body = Skeleton()
         self.body.add_brain("Brain")
         self.mind = self.body[0]
         self.Composition = ""
 
     def debug_self(self):
-        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + self.stats_formatted + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
+        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos.value) + " " + self.stats_formatted + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
 
     def run(self):
         self.mind.dream(self.body)
 
 
 class Walkable(Organism):
-    def __init__(self, name, stats=Stats.Being, pos=(0, 0), gfx="gfx/guy.png"):
-        super(Walkable, self).__init__(name, stats, pos, gfx)
-        self.bounds = pygame.Rect(0, 0, System.width, System.height)
-        self.lastpos = pos
+    def __init__(self, name, stats=Stats.Being, pos=(0, 0), bounds=(0, 0, System.width, System.height), gfx="gfx/guy.png"):
+        super(Walkable, self).__init__(name, stats, pos, bounds, gfx)
+        self.lastpos = self.pos.value
+        self.trail = list()
 
     def manage_stats(self):
         if System.time % 100 == 0:
@@ -126,16 +136,14 @@ class Walkable(Organism):
             else:
                 self.stats["Tire_Rate"].value -= 1
         if System.time % 20 == 0:
-            if self.lastpos != self.pos:
+            if self.lastpos != self.pos.value:
                 self.stats["Steps Taken"] += 1
+                self.trail.append(self.pos.value)
+        self.stats["Speed"].value = int(math.sqrt(self.stats["Energy"].value))
 
     def travel(self):
         if System.time % 20 == 0:
-            if self.bounds.collidepoint(self.pos):
-                self.lastpos = self.pos
-                self.pos = Tool.tup_add(self.pos, self.determine_velocity(self.stats["Movement Inclination"].value, 1))
-            else:
-                self.pos = Tool.pos_clamp(self.bounds, self.pos, 1)
+            self.pos.value = Tool.tup_add(self.pos.value, self.determine_velocity(self.stats["Movement Inclination"].value, self.stats["Speed"].value))
 
     def determine_velocity(self, i, factor):
         if i == Stats.Compass["+"]:
@@ -167,3 +175,11 @@ class Walkable(Organism):
         
         print(self.debug_self())
         print("System.time: ", System.time)
+    
+    def draw(self, sheet):
+        super(Walkable, self).draw(sheet, self.rect.value)
+        pygame.draw.rect(sheet, System.RED, self.rect.value, 1)
+        for i in range(len(self.trail)-1):
+            pygame.draw.line(sheet, System.RED, self.trail[i], self.trail[i+1])
+        
+        

@@ -1,7 +1,7 @@
 import pygame
 import sys
-import Tool
 import random
+import System
 
 
 class Simple():
@@ -29,7 +29,37 @@ class Bounded_Value(ComplexValue):
 
     @property
     def value(self):
-        self._value = Tool.clamp(self._value, self.bounds[0], self.bounds[1])
+        self._value = clamp(self._value, self.bounds[0], self.bounds[1])
+        return self._value 
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+
+class Bounded_Point(ComplexValue):
+    def __init__(self, pos, rect):
+        self.bounds = pygame.Rect(rect)
+        self.value = pos
+    
+    @property
+    def value(self):
+        self._value = point_clamp(self._value, self.bounds)
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+
+class Bounded_Rect(ComplexValue):
+    def __init__(self, rect, bounds):
+        self.bounds = pygame.Rect(bounds)
+        self.value = pygame.Rect(rect)
+        
+    @property
+    def value(self):
+        self._value.clamp_ip(self.bounds)
         return self._value
 
     @value.setter
@@ -46,7 +76,7 @@ class Unstable_Value(ComplexValue):
     @property
     def value(self):
         self._value += random.randint(-self.force, self.force)
-        self._value = Tool.clamp(self._value, self.bounds[0], self.bounds[1])
+        self._value = clamp(self._value, self.bounds[0], self.bounds[1])
         return self._value
 
     @value.setter
@@ -73,6 +103,15 @@ def clamp(n, minn, maxn):
         return maxn
     else:
         return n
+
+
+def point_clamp(pos, rect):
+    if rect.collidepoint(pos[0], pos[1]):
+        return pos
+    else:
+        x = clamp(pos[0], rect[0], rect[2])
+        y = clamp(pos[1], rect[1], rect[3])
+        return (x, y)
 
 
 def center(size, rect):
@@ -109,10 +148,14 @@ def pos_clamp(bounds, point, factor):
     x, y = point[0], point[1]
     if point[0] <= bounds[0]:
         x += factor
-    if point[1] <= bounds[1]:
+        return (x, y)
+    elif point[1] <= bounds[1]:
         y += factor
-    if point[0] >= bounds[2]:
+        return (x, y)
+    elif point[0] >= bounds[2]:
         x -= factor
-    if point[1] >= bounds[3]:
+        return (x, y)
+    elif point[1] >= bounds[3]:
         y -= factor
-    return (x, y)
+        return (x, y)
+   
