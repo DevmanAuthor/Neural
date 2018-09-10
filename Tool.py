@@ -1,5 +1,7 @@
 import pygame
 import sys
+import Tool
+import random
 
 
 class Simple():
@@ -14,6 +16,42 @@ class Simple():
 
     def move(self, x, y):
         self.pos = (self.pos[0] + x, self.pos[1] + y)
+
+
+class ComplexValue():
+    pass
+
+
+class Bounded_Value(ComplexValue):
+    def __init__(self, val, bounds):
+        self.value = val
+        self.bounds = bounds
+
+    @property
+    def value(self):
+        self._value = Tool.clamp(self._value, self.bounds[0], self.bounds[1])
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+
+class Unstable_Value(ComplexValue):
+    def __init__(self, val, bounds, force):
+        self.value = val
+        self.bounds = bounds
+        self.force = force
+
+    @property
+    def value(self):
+        self._value += random.randint(-self.force, self.force)
+        self._value = Tool.clamp(self._value, self.bounds[0], self.bounds[1])
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
 
 
 def tup_sub(a, b):

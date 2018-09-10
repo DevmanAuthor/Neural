@@ -16,8 +16,30 @@ class Basic(Tool.Simple):
     def set(self, statname, value):
         self.stats[statname] = value
 
+    def get_formated_stats(self):
+        self._stats_formatted = self.format_stats()
+        return self._stats_formatted
+
+    def set_formated_stats(self):
+        self._stats_formatted = self.format_stats()
+
+    def format_stats(self):
+        stats_actual = dict()
+        for key, val in self.stats.items():
+            if isinstance(val, Tool.ComplexValue):
+                stats_actual.update({key: val.value})
+            else:
+                stats_actual.update({key: val})
+        s = str(stats_actual)
+        s = s.replace('{', '[')
+        s = s.replace('}', ']')
+        s = s.replace('\'', '')
+        return s
+
     def debug_self(self):
-        return (self.name + " " + str(self.stats))
+        return (self.name + ": " + " " + self.stats_formatted)
+
+    stats_formatted = property(get_formated_stats, set_formated_stats)
 
 
 class Basic_Drawable(Basic, Image.Sprite):
@@ -26,7 +48,7 @@ class Basic_Drawable(Basic, Image.Sprite):
         Image.Sprite.__init__(self, gfx, pos)
 
     def debug_self(self):
-        return (self.name + " " + str(self.pos) + " " + self.stats)
+        return (self.name + " " + str(self.pos) + " " + self.stats_formatted)
 
 
 class Skeleton(list):
@@ -84,20 +106,27 @@ class Organism(Basic_Drawable):
         self.Composition = ""
 
     def debug_self(self):
-        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + str(self.stats) + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
+        return ("\n|=========[ " + self.name + " ]=========|\n" + ":---> " + str(self.pos) + " " + self.stats_formatted + "\n\n" + self.body.list_limbs() + "\n|==============================================================|")
 
     def run(self):
         self.mind.dream(self.body)
 
 
 class Walkable(Organism):
-    def __init__(self, name, stats=Stats.Fundamental, pos=(0, 0), gfx="gfx/guy.png"):
+    def __init__(self, name, stats=Stats.Being, pos=(0, 0), gfx="gfx/guy.png"):
         super(Walkable, self).__init__(name, stats, pos, gfx)
         self.bounds = pygame.Rect(0, 0, System.width, System.height)
 
+    def manage_stats(self):
+        self.stats["Energy"] += self.stats["Tire_Rate"].value
+        if self.stats["Max/Min Thought"].value < 50:
+            self.stats["Tire_Rate"].value += 0.01
+        else:
+            self.stats["Tire_Rate"].value -= 0.01
+
     def travel(self):
         if self.bounds.collidepoint(self.pos):
-            print("value: ", self.stats["Movement Inclination"].value)
+            # print("value: ", self.stats["Movement Inclination"].value)
             self.pos = Tool.tup_add(self.pos, self.determine_velocity(self.stats["Movement Inclination"].value, 1))
         else:
             self.pos = Tool.pos_clamp(self.bounds, self.pos, 1)
@@ -122,9 +151,12 @@ class Walkable(Organism):
         elif i == Stats.Compass["NW"]:
             return (-factor, -factor)
 
+    def debug_self(self):
+        return super(Walkable, self).debug_self() 
+
     def run(self):
         super(Walkable, self).run()
+        self.manage_stats()
         self.travel()
         
-        print("pos: ", self.pos)
-        print("tire_rate: ", self.stats.tire_rate.value)
+        print(self.debug_self())
