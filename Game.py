@@ -25,7 +25,7 @@ def Run():
             if event.type == pygame.QUIT:
                 System.Quit()
             SceneManager.handle_events(event)
-
+        System.time = System.checktime()
         SceneManager.check_active()
         SceneManager.update()
         pygame.transform.scale2x(System.render_sheet, System.screen)

@@ -116,20 +116,26 @@ class Walkable(Organism):
     def __init__(self, name, stats=Stats.Being, pos=(0, 0), gfx="gfx/guy.png"):
         super(Walkable, self).__init__(name, stats, pos, gfx)
         self.bounds = pygame.Rect(0, 0, System.width, System.height)
+        self.lastpos = pos
 
     def manage_stats(self):
-        self.stats["Energy"] += self.stats["Tire_Rate"].value
-        if self.stats["Max/Min Thought"].value < 50:
-            self.stats["Tire_Rate"].value += 0.01
-        else:
-            self.stats["Tire_Rate"].value -= 0.01
+        if System.time % 100 == 0:
+            self.stats["Energy"].value += self.stats["Tire_Rate"].value
+            if self.stats["Max/Min Thought"].value < 50:
+                self.stats["Tire_Rate"].value += 1
+            else:
+                self.stats["Tire_Rate"].value -= 1
+        if System.time % 20 == 0:
+            if self.lastpos != self.pos:
+                self.stats["Steps Taken"] += 1
 
     def travel(self):
-        if self.bounds.collidepoint(self.pos):
-            # print("value: ", self.stats["Movement Inclination"].value)
-            self.pos = Tool.tup_add(self.pos, self.determine_velocity(self.stats["Movement Inclination"].value, 1))
-        else:
-            self.pos = Tool.pos_clamp(self.bounds, self.pos, 1)
+        if System.time % 20 == 0:
+            if self.bounds.collidepoint(self.pos):
+                self.lastpos = self.pos
+                self.pos = Tool.tup_add(self.pos, self.determine_velocity(self.stats["Movement Inclination"].value, 1))
+            else:
+                self.pos = Tool.pos_clamp(self.bounds, self.pos, 1)
 
     def determine_velocity(self, i, factor):
         if i == Stats.Compass["+"]:
@@ -160,3 +166,4 @@ class Walkable(Organism):
         self.travel()
         
         print(self.debug_self())
+        print("System.time: ", System.time)

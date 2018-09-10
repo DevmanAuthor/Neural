@@ -21,6 +21,10 @@ def Load():
     Mixer = pygame.mixer
 
 
+def checktime():
+    return pygame.time.get_ticks()
+
+
 def Quit():
         pygame.display.quit()
         pygame.quit()
