@@ -24,6 +24,10 @@ class Sprite(Drawable, Tool.Simple):
     def load(self, gfx):
         if isinstance(gfx, str):
             return Tool.load_image(gfx)
+        elif isinstance(gfx, pygame.Surface):
+            self.gfx = gfx
+        else:
+            raise ValueError("gfx not string or surface")
    
     def draw(self, sheet, rect=None):
         if rect is None:
@@ -62,5 +66,12 @@ class SpriteSheet(list, object):
     def draw(self, sheet, index, pos):
         sheet.blit(self[index], pos)
 
-        
+
+class Tile(Sprite):
+    def __init__(self, gfx):
+        super(Tile, self).__init__(gfx)
+        self.size = 32
+        self.scale(self.size, self.size)
+
+
 Decor = SpriteSheet("gfx/UI/decor_basic.png", ([0, 0, 16, 16], [16, 0, 16, 16]))

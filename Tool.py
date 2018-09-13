@@ -141,7 +141,11 @@ def load_image(picdir): return pygame.image.load(picdir)
 def pyrect_sub(rect, value): return pygame.Rect(rect[0]-value, rect[1]-value, rect[2]-value, rect[3]-value)
 
 
-def pyrect_extend(rect, value): return pygame.Rect(rect[0]+value, rect[1]+value, rect[2]+value, rect[3]+value)
+def pyrect_extend(rect, value): return pygame.Rect(rect[0]-value, rect[1]-value, rect[2]+(value*2), rect[3]+(value*2))
+
+
+def rect_sub(rect, n):
+    return(rect[0]-n, rect[1]-n, rect[2]-n, rect[3]-n)
 
 
 def pos_clamp(bounds, point, factor):

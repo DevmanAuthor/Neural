@@ -1,5 +1,8 @@
+import System
+
+
 class Scene():
-    def __init__(self, active):
+    def __init__(self, active=False, layer=0):
         self.nextscene = self
         self.active = active
 
@@ -7,13 +10,16 @@ class Scene():
         raise NotImplementedError
     
     def update(self):
-        raise NotImplementedError
+        pass
 
     def draw(self, sheet):
         raise NotImplementedError
 
-    def birth_Scene(self, scene):
-        scene.active = True
+    def show_scene(self, scene):
+        if scene.active is False:
+            scene.active = True
+        else:
+            pass
         
     def change_scene(self, scene):
         scene.active = True

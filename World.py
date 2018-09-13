@@ -1,6 +1,5 @@
 import UI
 import Entity
-import Creatures
 import pygame
 
 

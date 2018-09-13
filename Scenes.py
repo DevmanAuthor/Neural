@@ -4,9 +4,8 @@ import Tool
 import UI
 import Entity
 import Director
-import Creatures
 import Image
-from SubScenes import ControlBar, CentralMenu
+from SubScenes.Scenes import CentralMenu, ControlBar, GameView
 
 
 class MainMenu(Director.Scene):
@@ -19,46 +18,46 @@ class MainMenu(Director.Scene):
     def update(self):
         pass
 
-    def load(self): 
-        ControlBar.load(self)
-        CentralMenu.load(self)
+    def load(self):
+        CentralMenu.load()
+        ControlBar.load()
 
     def handle_events(self, event):
-        if "started" in CentralMenu.handle_events(self, event):
+        if "started" in CentralMenu.handle_events(event):
             self.change_scene(GameScene)
-        if "cycle" in ControlBar.handle_events(self, event):
+        if "cycle" in ControlBar.handle_events(event):
             self.change_scene(GameScene)
 
-    def draw(self, sheet): 
-        self.Background.draw(sheet)
-        CentralMenu.draw(self, sheet)
-        ControlBar.draw(self, sheet)
+    def draw(self, sheet):
+        self.Background.draw(sheet) 
+        CentralMenu.draw(sheet)
+        ControlBar.draw(sheet)
         
-
-class Game_Scene(Director.Scene):
+  
+class GameScene(Director.Scene):
     def __init__(self, active=False):
-        super(Game_Scene, self).__init__(active)
+        super(GameScene, self).__init__(active)
         self.Buttons = dict()
         self.load()
 
-    def load(self): 
-        Creatures.load()
-        ControlBar.load(self)
-        
+    def load(self):
+        ControlBar.load()
+        GameView.load()
+
     def update(self):
-        Creatures.run()
+        pass
 
     def handle_events(self, event):
-        if "cycle" in ControlBar.handle_events(self, event):
+        if "cycle" in ControlBar.handle_events(event):
             self.change_scene(MainMenu)
- 
+
     def draw(self, sheet):
-        Creatures.draw(sheet)
-        ControlBar.draw(self, sheet)
-        
+        ControlBar.draw(sheet)
+        GameView.draw(sheet)
+
 
 MainMenu = MainMenu(True)
-GameScene = Game_Scene()
+GameScene = GameScene()
 
 
 def update_scenes():

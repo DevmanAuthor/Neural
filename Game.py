@@ -6,7 +6,6 @@ import Director
 import Stats
 import Entity
 import World
-import Creatures
 import Elements
 import Scenes
 import UI

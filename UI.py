@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 import System
 import Stats
-import Creatures
 import Entity
 import Tool
 import pygbutton

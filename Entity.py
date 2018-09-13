@@ -6,6 +6,7 @@ import Stats
 import Image
 import System
 import math
+from SubScenes import Scenes
 
 
 class Basic():
@@ -56,6 +57,9 @@ class Basic_Drawable(Basic, Image.Sprite):
         self.lasty = self._rect._value[1] + self._rect._value[3]
         return self._rect         
 
+    def lock_to(self, bounds):
+        self.bounds = bounds
+
     def debug_self(self):
         return (self.name + " " + str(self.pos.value) + " " + self.stats_formatted)
 
@@ -64,7 +68,6 @@ class Basic_Drawable(Basic, Image.Sprite):
             sheet.blit(self.gfx, self.pos.value)
         else:
             sheet.blit(self.gfx, rect)
-            
     rect = property(get_rect)
 
 
@@ -168,18 +171,21 @@ class Walkable(Organism):
     def debug_self(self):
         return super(Walkable, self).debug_self() 
 
+    def debug_draw(self):
+        pygame.draw.rect(System.screen, System.RED, self.rect.value, 1)
+        for i in range(len(self.trail)-1):
+            pygame.draw.line(System.screen, System.RED, self.trail[i], self.trail[i+1])
+
     def run(self):
         super(Walkable, self).run()
         self.manage_stats()
         self.travel()
         
         print(self.debug_self())
-        print("System.time: ", System.time)
+        # print("System.time: ", System.time)
     
     def draw(self, sheet):
         super(Walkable, self).draw(sheet, self.rect.value)
-        pygame.draw.rect(sheet, System.RED, self.rect.value, 1)
-        for i in range(len(self.trail)-1):
-            pygame.draw.line(sheet, System.RED, self.trail[i], self.trail[i+1])
+
         
         
