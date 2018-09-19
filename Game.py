@@ -17,7 +17,6 @@ SceneManager = Director.SceneManager(Scenes.List)
 
 
 def Run():
-    System.Load()
     System.screen.fill(System.BLACK)
     while SceneManager is not None:
         for event in pygame.event.get():

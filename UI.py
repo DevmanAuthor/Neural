@@ -1,20 +1,21 @@
 import pygame
 from pygame.locals import *
 import System
-import Stats
-import Entity
 import Tool
-import pygbutton
 import Image
         
 
-class Text(Image.Sprite, Tool.Simple, object):
+class Text(Tool.Simple, object):
     def __init__(self, string, color=System.WHITE, font=System.Default_Font, pos=(0, 0)):
+        super(Text, self).__init__(pos[0], pos[1]) 
         self.font = font
         self.color = color
-        self.pos = pos
         self.str = str(string)
         self._gfx = self.font.render(self.str, True, self.color)
+
+    def get_rect(self):
+        self._rect = pygame.Rect(self.pos[0], self.pos[1], self._gfx.get_rect().width, self._gfx.get_rect().height)
+        return self._rect
 
     def get_gfx(self):
         return self._gfx
@@ -23,12 +24,13 @@ class Text(Image.Sprite, Tool.Simple, object):
         if size is None:
             self._gfx = self.font.render(self.str, True, self.color)
         else:
-            self._gfx = pygame.transform.scale(self._gfx, )
+            self._gfx = pygame.transform.scale(self._gfx, size)
     
     def set_text(self, string):
         self.str = str(string)
 
     gfx = property(get_gfx, set_gfx)
+    rect = property(get_rect)
 
 
 class Button(Tool.Simple, object):
@@ -56,7 +58,7 @@ class Button(Tool.Simple, object):
     def set_rect(self, x, y, w, h):
         self._rect = pygame.Rect(x, y, w, h) 
 
-    def set_text(self, string, font=pygame.font.SysFont(None, 15), color=System.BLACK):
+    def set_text(self, string, font=System.Default_Font, color=System.BLACK):
         self.text = Text(string, color, font)
         self.text.pos = (self.rect.centerx-self.text.gfx.get_width(), self.rect.centery-self.text.gfx.get_height())
         
@@ -232,3 +234,45 @@ class ToggleButton(SwitchButton):
 
     def draw(self, sheet):
         Button.draw(self, sheet)
+
+
+class TextBox(Text):
+    def __init__(self, string, color=System.WHITE, font=System.Default_Font, pos=(0, 0)):
+        super(TextBox, self).__init__(string, color, font, pos)
+        self.active = False
+    
+    def get_background_rect(self):
+        self._bg_rect = Tool.pyrect_extend(self.rect, 5)
+        return self._bg_rect
+
+    def draw_box(self, sheet, fill, border=System.LIGHT_BLUE, disabled=System.DARKGRAY):
+        if disabled is not None and self.active is False:
+            pygame.draw.rect(sheet, disabled, self.bg_rect)
+        elif self.active is True:
+            pygame.draw.rect(sheet, fill, self.bg_rect)
+        else:
+            pass
+        pygame.draw.rect(sheet, border, self.bg_rect, 2)
+
+    def handle_events(self, event):
+        if event.type == MOUSEBUTTONDOWN:
+            if self._rect.collidepoint(event.pos):
+                self.active = True
+            else:
+                self.active = False
+        if event.type == KEYDOWN:
+            if self.active is True:
+                if event.key == K_RETURN:
+                    self.active = False
+                    pass
+                elif event.key == K_BACKSPACE:
+                    self.str = self.str[:-1]
+                else:
+                    self.str += event.unicode
+        self._gfx = self.font.render(self.str, True, self.color)
+        
+    def draw(self, sheet):
+        self.draw_box(sheet, System.BLACK)
+        sheet.blit(self.gfx, self.rect)
+    
+    bg_rect = property(get_background_rect)

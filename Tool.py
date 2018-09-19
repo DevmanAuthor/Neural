@@ -144,6 +144,9 @@ def pyrect_sub(rect, value): return pygame.Rect(rect[0]-value, rect[1]-value, re
 def pyrect_extend(rect, value): return pygame.Rect(rect[0]-value, rect[1]-value, rect[2]+(value*2), rect[3]+(value*2))
 
 
+def point_extend(point, value): return (point[0]+value, point[1]+value)
+
+
 def rect_sub(rect, n):
     return(rect[0]-n, rect[1]-n, rect[2]-n, rect[3]-n)
 

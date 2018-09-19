@@ -4,21 +4,19 @@ import sys
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 DARKGRAY = (64, 64, 64)
+DARKER_GRAY = (32, 32, 32)
 GRAY = (128, 128, 128)
 LIGHTGRAY = (180, 180, 180)
 RED = (255, 0, 0)
 GREEN = (0, 225, 0)
 BLUE = (0, 0, 225)
+LIGHT_BLUE = (100, 100, 255)
 R_PINK = (255, 85, 255)
 
-Mixer = None
-Default_Font = None
 
-
-def Load():
-    pygame.init()
-    Default_Font = pygame.font.SysFont(None, 12)
-    Mixer = pygame.mixer
+pygame.init()
+Default_Font = pygame.font.SysFont(None, 20)
+Mixer = pygame.mixer
 
 
 def checktime():
